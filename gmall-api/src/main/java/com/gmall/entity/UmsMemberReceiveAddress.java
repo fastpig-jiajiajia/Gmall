@@ -3,6 +3,9 @@ package com.gmall.entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+/**
+ * 用户收货地址表
+ */
 public class UmsMemberReceiveAddress implements Serializable {
 
     @Id

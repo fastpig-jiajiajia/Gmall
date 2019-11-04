@@ -18,6 +18,11 @@ public class AttrController  {
     @Reference
     AttrService attrService;
 
+    /**
+     * 保存商品属性
+     * @param pmsBaseAttrInfo
+     * @return
+     */
     @RequestMapping("saveAttrInfo")
     @ResponseBody
     public String saveAttrInfo(@RequestBody PmsBaseAttrInfo pmsBaseAttrInfo){
@@ -25,6 +30,11 @@ public class AttrController  {
         return "success";
     }
 
+    /**
+     * 根据三级目录得到商品属性列表
+     * @param catalog3Id
+     * @return
+     */
     @RequestMapping("attrInfoList")
     @ResponseBody
     public List<PmsBaseAttrInfo> attrInfoList(String catalog3Id){

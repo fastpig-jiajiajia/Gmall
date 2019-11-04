@@ -14,7 +14,7 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    UserService userService;
+    private UserService userService;
 
     @RequestMapping("getReceiveAddressByMemberId")
     public List<UmsMemberReceiveAddress> getReceiveAddressByMemberId(String memberId){

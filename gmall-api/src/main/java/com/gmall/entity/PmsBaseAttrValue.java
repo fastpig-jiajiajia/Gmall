@@ -6,8 +6,8 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
- * @param
- * @return
+ * SKU
+ * 商品属性值表，外键是商品属性主键
  */
 public class PmsBaseAttrValue implements Serializable {
     @Id

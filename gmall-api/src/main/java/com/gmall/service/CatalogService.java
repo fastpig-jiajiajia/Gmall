@@ -6,6 +6,9 @@ import com.gmall.entity.PmsBaseCatalog3;
 
 import java.util.List;
 
+/**
+ * 目录 Service
+ */
 public interface CatalogService {
     List<PmsBaseCatalog1> getCatalog1();
 

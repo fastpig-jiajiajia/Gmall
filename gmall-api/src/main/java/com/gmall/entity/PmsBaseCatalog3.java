@@ -3,6 +3,9 @@ package com.gmall.entity;
 import javax.persistence.Id;
 import java.io.Serializable;
 
+/**
+ * 三级目录表
+ */
 public class PmsBaseCatalog3 implements Serializable {
 
     @Id

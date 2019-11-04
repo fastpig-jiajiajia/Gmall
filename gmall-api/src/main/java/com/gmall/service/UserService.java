@@ -5,6 +5,9 @@ import com.gmall.entity.UmsMemberReceiveAddress;
 
 import java.util.List;
 
+/**
+ * 用户 Service
+ */
 public interface UserService {
 
     List<UmsMember> getAllUser();

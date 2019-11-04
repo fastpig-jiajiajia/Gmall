@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @param
- * @return
+ * SPU
+ * 商品属性，对应属性多个值
  */
 public class PmsBaseAttrInfo implements Serializable {
 

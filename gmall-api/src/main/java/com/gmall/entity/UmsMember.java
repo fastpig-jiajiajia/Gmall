@@ -6,6 +6,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * 用户基本信息表
+ */
 public class UmsMember implements Serializable{
 
     @Id

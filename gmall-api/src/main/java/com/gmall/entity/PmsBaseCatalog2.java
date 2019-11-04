@@ -5,6 +5,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 二级目录表
+ */
 public class PmsBaseCatalog2 implements Serializable {
     @Id
     @Column

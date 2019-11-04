@@ -15,21 +15,30 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.List;
 
 @Controller
-@CrossOrigin
+@CrossOrigin  // 跨域解决注解
 public class CatalogController {
 
+    // dubbo 的 Refrence 注解
     @Reference
     CatalogService catalogService;
 
-    @RequestMapping("getCatalog3")
+    /**
+     * 得到一级目录
+     * @return
+     */
+    @RequestMapping("getCatalog1")
     @ResponseBody
-    public List<PmsBaseCatalog3> getCatalog3(String catalog2Id){
+    public List<PmsBaseCatalog1> getCatalog1(){
 
-        List<PmsBaseCatalog3> catalog3s = catalogService.getCatalog3(catalog2Id);
-        return catalog3s;
+        List<PmsBaseCatalog1> catalog1s = catalogService.getCatalog1();
+        return catalog1s;
     }
 
-
+    /**
+     * 根据一级目录得到二级目录
+     * @param catalog1Id
+     * @return
+     */
     @RequestMapping("getCatalog2")
     @ResponseBody
     public List<PmsBaseCatalog2> getCatalog2(String catalog1Id){
@@ -38,11 +47,16 @@ public class CatalogController {
         return catalog2s;
     }
 
-    @RequestMapping("getCatalog1")
+    /**
+     * 根据二级目录得到三级目录
+     * @param catalog2Id
+     * @return
+     */
+    @RequestMapping("getCatalog3")
     @ResponseBody
-    public List<PmsBaseCatalog1> getCatalog1(){
+    public List<PmsBaseCatalog3> getCatalog3(String catalog2Id){
 
-        List<PmsBaseCatalog1> catalog1s = catalogService.getCatalog1();
-        return catalog1s;
+        List<PmsBaseCatalog3> catalog3s = catalogService.getCatalog3(catalog2Id);
+        return catalog3s;
     }
 }

@@ -86,4 +86,7 @@ public class SpuController {
         return pmsProductImages;
     }
 
+    public void test(){
+        
+    }
 }

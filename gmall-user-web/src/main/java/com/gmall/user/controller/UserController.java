@@ -1,9 +1,9 @@
 package com.gmall.user.controller;
 
-import com.alibaba.dubbo.config.annotation.Reference;
 import com.gmall.entity.UmsMember;
 import com.gmall.entity.UmsMemberReceiveAddress;
 import com.gmall.service.UserService;
+import jdk.nashorn.internal.ir.annotations.Reference;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

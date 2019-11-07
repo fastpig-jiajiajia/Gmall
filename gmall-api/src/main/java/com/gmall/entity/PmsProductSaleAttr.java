@@ -10,8 +10,9 @@ import java.util.List;
 /**
  * 商家销售属性
  * 商品属性：颜色，尺寸...
- * 通过 productid 关联
+ * 通过 productid 关联，一个商品对应多个商品属性
  * 一个商品销售属性对应多个商品销售属性值
+ * attrid 相当于平台商品属性，通过 attr_id 关联商品属性值
  */
 public class PmsProductSaleAttr implements Serializable {
 

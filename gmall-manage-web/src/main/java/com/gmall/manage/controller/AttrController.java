@@ -6,14 +6,11 @@ import com.gmall.entity.PmsBaseAttrValue;
 import com.gmall.entity.PmsBaseSaleAttr;
 import com.gmall.service.AttrService;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller
+@RestController
 @CrossOrigin
 public class AttrController  {
 
@@ -26,7 +23,6 @@ public class AttrController  {
      * @return
      */
     @RequestMapping("saveAttrInfo")
-    @ResponseBody
     public String saveAttrInfo(@RequestBody PmsBaseAttrInfo pmsBaseAttrInfo){
         String success = attrService.saveAttrInfo(pmsBaseAttrInfo);
         return success;
@@ -38,7 +34,6 @@ public class AttrController  {
      * @return
      */
     @RequestMapping("attrInfoList")
-    @ResponseBody
     public List<PmsBaseAttrInfo> attrInfoList(String catalog3Id){
 
         List<PmsBaseAttrInfo> pmsBaseAttrInfos = attrService.attrInfoList(catalog3Id);
@@ -51,7 +46,6 @@ public class AttrController  {
      * @return
      */
     @RequestMapping("getAttrValueList")
-    @ResponseBody
     public List<PmsBaseAttrValue> getAttrValueList(String attrId){
 
         List<PmsBaseAttrValue> pmsBaseAttrValueList = attrService.getAttrValueList(attrId);
@@ -63,7 +57,6 @@ public class AttrController  {
      * @return
      */
     @RequestMapping("baseSaleAttrList")
-    @ResponseBody
     public List<PmsBaseSaleAttr> baseSaleAttrList(){
 
         List<PmsBaseSaleAttr> pmsBaseSaleAttrs = attrService.baseSaleAttrList();

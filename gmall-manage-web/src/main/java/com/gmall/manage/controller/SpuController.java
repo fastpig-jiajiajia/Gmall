@@ -49,4 +49,8 @@ public class SpuController {
 
         return imgUrl;
     }
+
+    public void test(){
+        
+    }
 }

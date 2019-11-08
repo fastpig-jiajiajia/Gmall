@@ -61,6 +61,7 @@ public class SpuController {
 
         return imgUrl;
     }
+<<<<<<< HEAD
 
     /**
      * 根据商品 id 查询商品 属性对应值信息
@@ -89,4 +90,6 @@ public class SpuController {
     public void test(){
         
     }
+=======
+>>>>>>> parent of dbe31e3... feature2 第1次提交
 }

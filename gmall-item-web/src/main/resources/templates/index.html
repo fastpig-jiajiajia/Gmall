@@ -23,7 +23,7 @@ hello thymeleaf
 <!-- 判断 -->
 <p th:if="1==1" >我是存在的</p>
 
-<input type="checkbox" th:checked="${check}=='1'" />
+<input type="checkbox" th:text="(${check}=='0') ? 'checked' : ''" th:checked="(${check}=='0') ? true : false" />
 
 <!-- 页面引入-->
 

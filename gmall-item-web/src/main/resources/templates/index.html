@@ -25,9 +25,20 @@ hello thymeleaf
 
 <input type="checkbox" th:text="(${check}=='0') ? 'checked' : ''" th:checked="(${check}=='0') ? true : false" />
 
-<!-- 页面引入-->
 
+<br>
 <!-- 传值给javascript -->
+<a th:href="'javascript:hello(\'' + ${hello} + '\')'">click me</a>
+
+<!-- 页面引入-->
+<div th:include="indexInner::divInner">被引入的页面</div>
+
+
+<script language="JavaScript" >
+    function hello(data) {
+        alert(data);
+    }
+</script>
 
 </body>
 </html>

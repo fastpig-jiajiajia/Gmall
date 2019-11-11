@@ -46,7 +46,11 @@
             <artifactId>jedis</artifactId>
         </dependency>
 
-
+        <!-- https://mvnrepository.com/artifact/org.redisson/redisson -->
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -8,12 +8,15 @@ import com.gmall.entity.PmsSkuInfo;
 import com.gmall.entity.PmsSkuSaleAttrValue;
 import com.gmall.service.SkuService;
 import com.gmall.service.SpuService;
+import org.apache.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +66,12 @@ public class ItemController {
      * @return
      */
     @RequestMapping("{skuId}.html")
-    public String item(@PathVariable String skuId, ModelMap modelMap){
+    public String item(@PathVariable String skuId, ModelMap modelMap, HttpServletRequest request){
+        // 得到请求的 ip
+        String remoteAttr = request.getRemoteAddr();
+        // 如果是通过 Nginx 进行反向代理，得到是 Nginx 的 ip
+        request.getHeader("");
+
         PmsSkuInfo pmsSkuInfo = skuService.getSkuById(skuId);
         modelMap.put("skuInfo", pmsSkuInfo);
 

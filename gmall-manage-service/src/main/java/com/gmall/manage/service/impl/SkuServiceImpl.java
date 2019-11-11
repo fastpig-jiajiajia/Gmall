@@ -19,6 +19,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 
 import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class SkuServiceImpl implements SkuService {
@@ -87,8 +89,20 @@ public class SkuServiceImpl implements SkuService {
         return skuInfo;
     }
 
+    /**
+     * 实现思路，首先查询 redis，如果有值就直接从 redis 中查找（缓存穿透）；
+     * redis 中不存在值，先去数据库查询，在这个时候，redis 中是不存在值的，如果此时大量的并发请求进来同时访问一个数据，
+     * 那么请求都会直接访问数据库，导致数据库的崩溃（缓存击穿）。
+     * 解决方案：在 redis 设置分布式锁（设置该键值对在一定时间内不允许被修改），
+     * 第一个设置成功的 会得到返回值 OK，其余的得到 nil 值，
+     * 如果得到 OK 值就查询数据库，并将值写入 redis 缓存，如果数据库中不存在该值，就将该键的值设置为空。
+     * 否则的话，该线程睡眠三秒，使用自旋，保证在同一个线程进行上述操作。
+     * @param skuId
+     * @return
+     */
     @Override
     public PmsSkuInfo getSkuById(String skuId) {
+        String ip = "127.0.0.1";
         // 查找商品对象
         PmsSkuInfo pmsSkuInfo = new PmsSkuInfo();
         ShardedJedis jedis = redisUtil.getJedis();
@@ -100,9 +114,12 @@ public class SkuServiceImpl implements SkuService {
         if(StringUtils.isNotBlank(skuJson)){
             pmsSkuInfo = JSON.parseObject(skuJson, PmsSkuInfo.class);
         }else{
-            // 如果没有缓存查询 mysql，再存入缓存
+            // 如果没有缓存，先查询 mysql，再存入缓存
             // 设置分布式锁，设置带有效时间的键值对，只有在键值对失效后才可以进行对该键值对的设置
-            String OK = jedis.set("sku:" + skuId + ":lock", "1", "nx", "px", 10);
+            // 设置token，防止因访问数据库时间过长，导致redis锁失效，而其他请求设置redis分布式锁成功的情况下，
+            // 自旋后误删其他请求的锁
+            String token = UUID.randomUUID().toString();
+            String OK = jedis.set("sku:" + skuId + ":lock", token, "nx", "px", 10*1000);
             if(StringUtils.isNotBlank(OK) && OK.equals("OK")) {
                 // 设置成功有权在 10 秒的过期时间内访问数据库
                 pmsSkuInfo = getSkuByFromDb(skuId);
@@ -114,8 +131,19 @@ public class SkuServiceImpl implements SkuService {
                     // 为了防止缓存穿透，将null 或者空字符串设置给 redis
                     jedis.setex("sku:" + skuId + ":info", 60*3, JSON.toJSONString(""));
                 }
+
+                // 在访问mysql后，将mysql的分布锁释放
+                System.out.println("ip为"+ip+"的同学:"+Thread.currentThread().getName()+"使用完毕，将锁归还："+"sku:" + skuId + ":lock");
+                // 获得设置分布式锁的值，防止误删
+                String lockToken = jedis.get("sku:" + skuId + ":lock");
+                if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){
+                    //jedis.eval("lua");可与用lua脚本，在查询到key的同时删除该key，防止高并发下的意外的发生
+                    jedis.del("sku:" + skuId + ":lock");// 用token确认删除的是自己的sku的锁
+                }
+
             }else{
-                // 设置失败，自旋（该线程在睡眠几秒后，重新尝试本地方法）
+                // 设置失败，睡眠3 秒，3 秒后再次进行尝试设置值
+                // 自旋（该线程在睡眠几秒后，重新尝试本地方法）
                 try {
                     Thread.sleep(3000);
                 }catch(Exception e) {
@@ -135,5 +163,21 @@ public class SkuServiceImpl implements SkuService {
     public List<PmsSkuInfo> getSkuSaleAttrValueListBySpu(String productId) {
         List<PmsSkuInfo> pmsSkuInfoList = pmsSkuInfoMapper.selectSkuSaleAttrValueListBySpu(productId);
         return pmsSkuInfoList;
+    }
+
+
+    private AtomicReference<Thread> cas = new AtomicReference<Thread>();
+
+    public void lock() {
+        Thread current = Thread.currentThread();
+        // 利用CAS
+        while (!cas.compareAndSet(null, current)) {
+            // DO nothing
+        }
+    }
+
+    public void unlock() {
+        Thread current = Thread.currentThread();
+        cas.compareAndSet(current, null);
     }
 }

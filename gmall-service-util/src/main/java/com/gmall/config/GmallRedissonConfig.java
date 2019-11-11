@@ -1,4 +1,4 @@
-package com.atguigu.gmall.util;
+package com.gmall.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -16,10 +16,14 @@ public class GmallRedissonConfig {
     @Value("${spring.redis.port:6379}")
     private String port;
 
+    @Value("${spring.redis.password}")
+    private String password;
+
     @Bean
     public RedissonClient redissonClient(){
         Config config = new Config();
         config.useSingleServer().setAddress("redis://"+host+":"+port);
+        config.useSingleServer().setPassword(password);
         RedissonClient redisson = Redisson.create(config);
         return redisson;
     }

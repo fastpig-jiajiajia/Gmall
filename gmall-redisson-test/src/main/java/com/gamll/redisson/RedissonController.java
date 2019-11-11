@@ -1,7 +1,7 @@
-package com.atguigu.gmall.gmallredissontest.redissonTest;
+package com.gamll.redisson;
 
-
-import com.atguigu.gmall.util.RedisUtil;
+import com.gmall.config.GmallRedissonConfig;
+import com.gmall.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
@@ -9,21 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import redis.clients.jedis.Jedis;
+import redis.clients.jedis.ShardedJedis;
 
 @Controller
 public class RedissonController {
 
-    @Autowired
-    RedisUtil redisUtil;
+    RedisUtil redisUtil = new RedisUtil();
 
-    @Autowired
-    RedissonClient redissonClient;
+    RedissonClient redissonClient = new GmallRedissonConfig().redissonClient();
 
     @RequestMapping("testRedisson")
     @ResponseBody
     public String testRedisson(){
-        Jedis jedis = redisUtil.getJedis();
+        ShardedJedis jedis = redisUtil.getJedis();
         RLock lock = redissonClient.getLock("lock");// 声明锁
         lock.lock();//上锁
         try {

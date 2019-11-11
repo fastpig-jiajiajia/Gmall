@@ -16,6 +16,7 @@
         <option value="$PROJECT_DIR$/gmall-web-util/pom.xml" />
         <option value="$PROJECT_DIR$/fastdfs-client-java/pom.xml" />
         <option value="$PROJECT_DIR$/gmall-item-web/pom.xml" />
+        <option value="$PROJECT_DIR$/gmall-redisson-test/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

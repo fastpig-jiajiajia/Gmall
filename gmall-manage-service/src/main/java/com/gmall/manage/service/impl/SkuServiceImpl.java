@@ -102,7 +102,6 @@ public class SkuServiceImpl implements SkuService {
      */
     @Override
     public PmsSkuInfo getSkuById(String skuId) {
-        String ip = "127.0.0.1";
         // 查找商品对象
         PmsSkuInfo pmsSkuInfo = new PmsSkuInfo();
         ShardedJedis jedis = redisUtil.getJedis();
@@ -133,7 +132,6 @@ public class SkuServiceImpl implements SkuService {
                 }
 
                 // 在访问mysql后，将mysql的分布锁释放
-                System.out.println("ip为"+ip+"的同学:"+Thread.currentThread().getName()+"使用完毕，将锁归还："+"sku:" + skuId + ":lock");
                 // 获得设置分布式锁的值，防止误删
                 String lockToken = jedis.get("sku:" + skuId + ":lock");
                 if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){

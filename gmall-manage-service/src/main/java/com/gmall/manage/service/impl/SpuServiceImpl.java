@@ -7,6 +7,7 @@ import com.gmall.entity.PmsProductSaleAttr;
 import com.gmall.entity.PmsProductSaleAttrValue;
 import com.gmall.manage.mapper.*;
 import com.gmall.service.SpuService;
+import com.gmall.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -22,6 +23,8 @@ public class SpuServiceImpl implements SpuService {
     private PmsProductSaleAttrMapper pmsProductSaleAttrMapper;
     @Autowired
     private PmsProductSaleAttrValueMapper pmsProductSaleAttrValueMapper;
+    @Autowired
+    private RedisUtil redisUtil;
 
     @Override
     public List<PmsProductInfo> spuList(String catalog3Id) {

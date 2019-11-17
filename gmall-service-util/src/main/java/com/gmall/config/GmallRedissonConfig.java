@@ -20,7 +20,7 @@ public class GmallRedissonConfig {
     private String password;
 
     @Bean
-    public RedissonClient redissonClient(){
+    public RedissonClient getRedissonClient(){
         Config config = new Config();
         config.useSingleServer().setAddress("redis://"+host+":"+port);
         config.useSingleServer().setPassword(password);

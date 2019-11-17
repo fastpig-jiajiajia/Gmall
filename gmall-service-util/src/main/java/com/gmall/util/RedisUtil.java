@@ -1,14 +1,20 @@
 package com.gmall.util;
 
+import org.springframework.context.annotation.ComponentScan;
 import redis.clients.jedis.*;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class RedisUtil {
-
-    private JedisPool jedisPool;
-    private static ShardedJedisPool pool;
+    /**
+     * Jedis
+     */
+    private static JedisPool jedisPool;
+    /**
+     * ShardedJedis 实现一致性哈希的 Jedis
+     */
+    private static ShardedJedisPool shardedJedisPool;
 
     public void initPool(String host,int port ,int database, String password){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
@@ -23,12 +29,25 @@ public class RedisUtil {
         jedisShardInfo.setPassword(password);
         List<JedisShardInfo> list = new LinkedList<JedisShardInfo>();
         list.add(jedisShardInfo);
-        pool = new ShardedJedisPool(poolConfig, list);
+        shardedJedisPool = new ShardedJedisPool(poolConfig, list);
     }
 
-    public ShardedJedis getJedis(){
-        ShardedJedis shardedJedis = pool.getResource();
+    /**
+     * 获取 ShardedJedis
+     * @return
+     */
+    public ShardedJedis getShardedJedis(){
+        ShardedJedis shardedJedis = shardedJedisPool.getResource();
         return shardedJedis;
+    }
+
+    /**
+     * 获取 Jedis
+     * @return
+     */
+    public Jedis getJedis(){
+        Jedis jedis = jedisPool.getResource();
+        return jedis;
     }
 
 }

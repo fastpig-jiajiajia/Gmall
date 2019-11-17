@@ -10,12 +10,14 @@
     <file url="file://$PROJECT_DIR$/gmall-manage-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-parent" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-redisson-test" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/gmall-redisson-test" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gmall-search-service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/gmall-search-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-service-util" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-user" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-user-service" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-user-web" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/gmall-web-util" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/search-service" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

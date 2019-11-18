@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.gmall.manage.mapper.PmsBaseAttrInfoMapper">
 
-    <select id="selectAttrValueListByValueId"  resultMap="selectAttrValueListByValueIdMap">
+    <select id="selectAttrValueListByValueId" resultMap="selectAttrValueListByValueIdMap">
         SELECT
           ba.*,ba.id as ba_id,bv.*,bv.id as bv_id
         FROM

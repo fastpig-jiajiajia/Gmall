@@ -28,7 +28,7 @@ public class SearchController {
     }
 
     @RequestMapping("list.html")
-    public String list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {// 三级分类id、关键字、
+    public ModelAndView list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {// 三级分类id、关键字、
 
         // 调用搜索服务，返回搜索结果
         List<PmsSearchSkuInfo> pmsSearchSkuInfos = searchService.list(pmsSearchParam);
@@ -44,7 +44,10 @@ public class SearchController {
             }
         }
         // 根据valueId将属性列表查询出来
-        List<PmsBaseAttrInfo> pmsBaseAttrInfos = attrService.getAttrValueListByValueId(valueIdSet);
+        List<PmsBaseAttrInfo> pmsBaseAttrInfos = null;
+        if(!valueIdSet.isEmpty()){
+            pmsBaseAttrInfos = attrService.getAttrValueListByValueId(valueIdSet);
+        }
         modelMap.put("attrList", pmsBaseAttrInfos);
 
         // 对平台属性集合进一步处理，去掉当前条件中valueId所在的属性组
@@ -87,7 +90,7 @@ public class SearchController {
             modelMap.put("keyword", keyword);
         }
 
-        return "list";
+        return new ModelAndView("list");
     }
 
 
@@ -123,6 +126,11 @@ public class SearchController {
         return urlParam;
     }
 
+    /**
+     * 生成鼠标悬停、点击时的跳转链接
+     * @param pmsSearchParam
+     * @return
+     */
     private String getUrlParam(PmsSearchParam pmsSearchParam) {
         String keyword = pmsSearchParam.getKeyword();
         String catalog3Id = pmsSearchParam.getCatalog3Id();

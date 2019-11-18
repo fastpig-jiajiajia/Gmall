@@ -28,8 +28,15 @@ public class SearchServiceImpl implements SearchService {
     @Autowired
     JestClient jestClient;
 
+    /**
+     * 查询 elastic search 获得结果
+     *
+     * @param pmsSearchParam
+     * @return
+     */
     @Override
     public List<PmsSearchSkuInfo> list(PmsSearchParam pmsSearchParam) {
+        // 生成查询字符串
         String dslStr = getSearchDsl(pmsSearchParam);
         System.err.println(dslStr);
         // 用api执行复杂查询
@@ -42,7 +49,7 @@ public class SearchServiceImpl implements SearchService {
             e.printStackTrace();
         }
         List<SearchResult.Hit<PmsSearchSkuInfo, Void>> hits = new ArrayList<>();
-        if(!org.springframework.util.StringUtils.isEmpty(execute)){
+        if (!org.springframework.util.StringUtils.isEmpty(execute)) {
             hits = execute.getHits(PmsSearchSkuInfo.class);
         }
 
@@ -50,7 +57,7 @@ public class SearchServiceImpl implements SearchService {
             PmsSearchSkuInfo source = hit.source;
             // 替换为高亮显示
             Map<String, List<String>> highlight = hit.highlight;
-            if(!org.springframework.util.StringUtils.isEmpty(highlight)){
+            if (!org.springframework.util.StringUtils.isEmpty(highlight)) {
                 String skuName = highlight.get("skuName").get(0);
                 source.setSkuName(skuName);
                 pmsSearchSkuInfos.add(source);
@@ -64,12 +71,13 @@ public class SearchServiceImpl implements SearchService {
 
     /**
      * 根据传参获取查询 dsl
+     *
      * @param pmsSearchParam
      * @return
      */
     private String getSearchDsl(PmsSearchParam pmsSearchParam) {
 
-        String[] skuAttrValueList = pmsSearchParam.getValueId();
+        String[] skuAttrValueArray = pmsSearchParam.getValueId();
         String keyword = pmsSearchParam.getKeyword();
         String catalog3Id = pmsSearchParam.getCatalog3Id();
 
@@ -79,20 +87,20 @@ public class SearchServiceImpl implements SearchService {
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder();
 
         // filter
-        if(StringUtils.isNotBlank(catalog3Id)){
-            TermQueryBuilder termQueryBuilder = new TermQueryBuilder("catalog3Id",catalog3Id);
+        if (StringUtils.isNotBlank(catalog3Id)) {
+            TermQueryBuilder termQueryBuilder = new TermQueryBuilder("catalog3Id", catalog3Id);
             boolQueryBuilder.filter(termQueryBuilder);
         }
-        if(skuAttrValueList!=null){
-            for (String pmsSkuAttrValue : skuAttrValueList) {
-                TermQueryBuilder termQueryBuilder = new TermQueryBuilder("skuAttrValueList.valueId",pmsSkuAttrValue);
+        if (skuAttrValueArray != null) {
+            for (String pmsSkuAttrValue : skuAttrValueArray) {
+                TermQueryBuilder termQueryBuilder = new TermQueryBuilder("skuAttrValueList.valueId", pmsSkuAttrValue);
                 boolQueryBuilder.filter(termQueryBuilder);
             }
         }
 
         // must
-        if(StringUtils.isNotBlank(keyword)){
-            MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("skuName",keyword);
+        if (StringUtils.isNotBlank(keyword)) {
+            MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("skuName", keyword);
             boolQueryBuilder.must(matchQueryBuilder);
         }
 

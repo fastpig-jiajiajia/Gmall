@@ -5,6 +5,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * 对应 ES 中的 Mapping 的数据结构
+ */
 public class PmsSearchSkuInfo implements Serializable{
 
     @Id

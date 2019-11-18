@@ -111,6 +111,11 @@ public class AttrServiceImpl implements AttrService {
         return pmsBaseSaleAttrMapper.selectAll();
     }
 
+    /**
+     * 根据平台属性值的 id，查询出平台属性及平台属性值列表
+     * @param valueIdSet
+     * @return
+     */
     @Override
     public List<PmsBaseAttrInfo> getAttrValueListByValueId(Set<String> valueIdSet) {
 

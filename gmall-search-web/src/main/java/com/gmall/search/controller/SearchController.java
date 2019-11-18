@@ -30,11 +30,11 @@ public class SearchController {
     @RequestMapping("list.html")
     public ModelAndView list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {// 三级分类id、关键字、
 
-        // 调用搜索服务，返回搜索结果
+        // 调用搜索服务，从 ES 中搜索，返回搜索结果
         List<PmsSearchSkuInfo> pmsSearchSkuInfos = searchService.list(pmsSearchParam);
         modelMap.put("skuLsInfoList", pmsSearchSkuInfos);
 
-        // 抽取检索结果锁包含的平台属性集合
+        // 获得检索结果所包含的平台属性集合，将属性值id取出进行去重
         Set<String> valueIdSet = new HashSet<>();
         for (PmsSearchSkuInfo pmsSearchSkuInfo : pmsSearchSkuInfos) {
             List<PmsSkuAttrValue> skuAttrValueList = pmsSearchSkuInfo.getSkuAttrValueList();
@@ -43,7 +43,7 @@ public class SearchController {
                 valueIdSet.add(valueId);
             }
         }
-        // 根据valueId将属性列表查询出来
+        // 根据属性id将 平台属性值列表查询出来
         List<PmsBaseAttrInfo> pmsBaseAttrInfos = null;
         if(!valueIdSet.isEmpty()){
             pmsBaseAttrInfos = attrService.getAttrValueListByValueId(valueIdSet);
@@ -80,8 +80,6 @@ public class SearchController {
             }
             modelMap.put("attrValueSelectedList", pmsSearchCrumbs);
         }
-
-
 
         String urlParam = getUrlParam(pmsSearchParam);
         modelMap.put("urlParam", urlParam);
@@ -127,7 +125,7 @@ public class SearchController {
     }
 
     /**
-     * 生成鼠标悬停、点击时的跳转链接
+     * 生成平台属性列表标签点击时的跳转链接，生成的链接是和此时地址栏的地址一样的，在点击跳转时，前端会将标签拼接上去
      * @param pmsSearchParam
      * @return
      */

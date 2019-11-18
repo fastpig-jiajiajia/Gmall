@@ -1,5 +1,8 @@
 package com.gmall.entity;
 
+/**
+ * 面包屑属性类
+ */
 public class PmsSearchCrumb {
 
     private String valueId;

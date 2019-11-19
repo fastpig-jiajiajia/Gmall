@@ -20,6 +20,7 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String password;
 
+
     // spring 容器加载时就将其加载进来
     @Bean
     public RedisUtil getRedisUtil(){

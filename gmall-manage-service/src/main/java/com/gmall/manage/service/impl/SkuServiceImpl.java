@@ -102,7 +102,7 @@ public class SkuServiceImpl implements SkuService {
      * @return
      */
     @Override
-    public PmsSkuInfo getSkuById(String skuId) {
+    public PmsSkuInfo getSkuById(String skuId, String str) {
         // 查找商品对象
         PmsSkuInfo pmsSkuInfo = new PmsSkuInfo();
         ShardedJedis shardedJedis = redisUtil.getShardedJedis();
@@ -154,7 +154,7 @@ public class SkuServiceImpl implements SkuService {
             }
 
             // 必须用 return，否则会重新开辟一个线程。
-            return getSkuById(skuId);
+            return getSkuById(skuId, "");
         }
         shardedJedis.close();
         jedis.close();

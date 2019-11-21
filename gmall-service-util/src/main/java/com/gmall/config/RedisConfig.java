@@ -20,6 +20,24 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String password;
 
+    @Value("${spring.redis.testOnBorrow}")
+    private boolean testOnBorrow;
+
+    @Value("${spring.redis.testOnReturnt}")
+    private boolean testOnReturnt;
+
+    @Value("${spring.redis.pool.max-active}")
+    private Integer maxActive;
+
+    @Value("${spring.redis.pool.max-wait}")
+    private Integer maxWait;
+
+    @Value("${spring.redis.pool.min-idle}")
+    private Integer minIdle;
+
+    @Value("${spring.redis.timeout}")
+    private Integer timeout;
+
 
     // spring 容器加载时就将其加载进来
     @Bean
@@ -29,7 +47,7 @@ public class RedisConfig {
         }
         RedisUtil redisUtil=new RedisUtil();
         // 初始化连接池
-        redisUtil.initPool(host, port, database, password);
+        redisUtil.initPool(host, port, database, password, testOnBorrow);
         return redisUtil;
     }
 }

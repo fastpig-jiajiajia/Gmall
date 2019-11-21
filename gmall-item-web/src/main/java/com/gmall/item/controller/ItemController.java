@@ -72,7 +72,7 @@ public class ItemController {
         // 如果是通过 Nginx 进行反向代理，得到是 Nginx 的 ip
         request.getHeader("");
 
-        PmsSkuInfo pmsSkuInfo = skuService.getSkuById(skuId);
+        PmsSkuInfo pmsSkuInfo = skuService.getSkuById(skuId, "");
         modelMap.put("skuInfo", pmsSkuInfo);
 
         //销售属性列表

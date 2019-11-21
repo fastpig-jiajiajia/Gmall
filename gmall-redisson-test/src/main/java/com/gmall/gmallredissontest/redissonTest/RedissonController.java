@@ -23,7 +23,6 @@ public class RedissonController {
     RedissonClient redissonClient;
 
     @RequestMapping("testRedisson")
-    @ResponseBody
     public String testRedisson(){
         ShardedJedis shardedJedis = redisUtil.getShardedJedis();
         RLock lock = redissonClient.getLock("lock");// 声明锁

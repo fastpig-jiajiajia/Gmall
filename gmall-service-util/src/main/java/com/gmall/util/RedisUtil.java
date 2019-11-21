@@ -16,15 +16,15 @@ public class RedisUtil {
      */
     private static ShardedJedisPool shardedJedisPool;
 
-    public void initPool(String host,int port ,int database, String password){
+    public void initPool(String host,int port ,int database, String password, boolean testOnBorrow){
         JedisPoolConfig poolConfig = new JedisPoolConfig();
         poolConfig.setMaxTotal(2000);
         poolConfig.setMaxIdle(50);
         poolConfig.setMinIdle(8);
         poolConfig.setBlockWhenExhausted(true);
         poolConfig.setMaxWaitMillis(10*1000);
-        poolConfig.setTestOnBorrow(true);
-        poolConfig.setTestOnReturn(true);
+        poolConfig.setTestOnBorrow(testOnBorrow);
+        poolConfig.setTestOnReturn(false);
         //Idle时进行连接扫描
         poolConfig.setTestWhileIdle(true);
         //表示idle object evitor两次扫描之间要sleep的毫秒数

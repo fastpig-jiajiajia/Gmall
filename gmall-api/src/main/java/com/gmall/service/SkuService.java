@@ -7,7 +7,7 @@ import java.util.List;
 public interface SkuService {
     void saveSkuInfo(PmsSkuInfo pmsSkuInfo);
 
-    PmsSkuInfo getSkuById(String skuId);
+    PmsSkuInfo getSkuById(String skuId, String str);
 
     List<PmsSkuInfo> getSkuSaleAttrValueListBySpu(String productId);
 

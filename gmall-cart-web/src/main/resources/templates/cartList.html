@@ -79,105 +79,7 @@
             </ul>
         </div>
 
-        <div class="One_ShopCon">
-            <ul>
-                <li  th:each="cartInfo:${cartList}">
-                    <div> </div>
-
-                    <div>
-                        <ol>
-                            <li><input type="checkbox"   class="check"  th:value="${cartInfo.skuId}"  onchange="checkSku(this)" th:checked="(${cartInfo.isChecked}==1)?'true':'false'" /></li>
-                            <li>
-                                <dt><img  th:src="${cartInfo.imgUrl}"  src="img\shop1.jpg" alt=""></dt>
-                                <dd  th:onclick="'toItem('+${cartInfo.skuId}+')'">
-                                    <p>
-                                        <span th:text="${cartInfo.skuName}" >TCL 55A950C 55英寸32核</span>
-                                    </p>
-                                </dd>
-                            </li>
-                            <li>
-                                <p class="dj" th:text="'￥'+${cartInfo.skuPrice}" >4599.00</p>
-                            </li>
-                            <li>
-                                <p>
-                                    <span>-</span>
-                                    <span th:text="${cartInfo.skuNum}">5</span>
-                                    <span>+</span>
-                                </p>
-                            </li>
-                            <li style="font-weight:bold"><p class="zj" th:text="'￥'+${cartInfo.totalPrice}"  >￥22995.00</p></li>
-                            <li>
-                                <p>删除</p>
-                            </li>
-                        </ol>
-                    </div>
-                </li>
-                <!--<li>
-                    <div>
-                    </div>
-                    <div>
-                        <ol>
-                            <li><input type="checkbox"  class="check"></li>
-                            <li>
-                                <dt><img src="img\shop1.jpg" alt=""></dt>
-                                <dd>
-                                    <p>
-
-                                        <span>TCL 55A950C 55英寸32核</span>
-                                        <span>尺码: 55时 超薄曲面 人工智能</span>
-                                    </p>
-                                    <p>人工智能 HDR曲面超薄4K电视金属机</p>
-
-                                </dd>
-                            </li>
-                            <li>
-                                <p class="dj">￥4599.00</p>
-
-                            </li>
-                            <li>
-                                <p>
-                                    <span>-</span>
-                                    <span>5</span>
-                                    <span>+</span>
-                                </p>
-
-                            </li>
-                            <li style="font-weight:bold"><p class="zj">￥22995.00</p></li>
-                            <li>
-                                <p>删除</p>
-
-                            </li>
-                        </ol>
-                    </div>
-                </li>-->
-
-            </ul>
-        </div>
-        <div class="One_ShopFootBuy fix1">
-            <div>
-                <ul>
-                    <li><input type="checkbox" class="allCheck"><span>全选</span></li>
-                    <li>删除选中的商品</li>
-                    <li>移到我的关注</li>
-                    <li>清除下柜商品</li>
-                </ul>
-            </div>
-            <div>
-                 <font style="color:#e64346;font-weight:bold;" class="sumNum"> </font>&nbsp;
-
-                <ul>
-                    <li><img src="img/buyNumleft.png" alt=""></li>
-                    <li><img src="img/buyNumright.png" alt=""></li>
-                </ul>
-            </div>
-            <div>
-                <ol>
-                    <li>总价:<span style="color:#e64346;font-weight:bold;font-size:16px;" class="fnt">￥0.00</span>  </li>
-
-                </ol>
-            </div>
-            <div><button  onclick="toTrade()" type="button">去结算</button></div>
-        </div>
+        <div id="cartListInner" th:include="cartListInner"></div>
     </div>
 </div>
 
@@ -192,7 +94,7 @@
                 <li>删除商品？</li>
                 <li>您可以选择移到关注，或删除商品。</li>
             </dd>
-            </dl>
+        </dl>
     </div>
     <div>
         <button type="button">删除</button>
@@ -219,7 +121,7 @@
                 <li>移到关注</li>
                 <li>移动后选中商品将不再购物车中显示</li>
             </dd>
-            </dl>
+        </dl>
     </div>
     <div>
         <button type="button">确定</button>
@@ -265,34 +167,34 @@
 <script src="/js/index.js" charset="utf-8"></script>
 <script type="text/javascript">
 
-     function toTrade(){
-         window.location.href="http://cart.gmall.com:8087/toTrade";
+    function toTrade(){
+        window.location.href="http://cart.gmall.com:8084/toTrade";
     }
     function toItem(skuId) {
         window.location.href="http://item.gmall.com:8084/"+skuId+".html";
     }
 
     function login(){
-      var s = encodeURIComponent("http://cart.gmall.com:8087/cartList");
-       window.location.href="http://passport.atguigu.com/index?originUrl="+s;
+        var s = encodeURIComponent("http://cart.gmall.com:8087/cartList");
+        window.location.href="http://passport.atguigu.com/index?originUrl="+s;
     }
 
     function checkSku( chkbox){
-       var skuId= $(chkbox).attr("value");
-       var checked=$(chkbox).prop("checked");
-       var isCheckedFlag="0";
-       if(checked){
-           isCheckedFlag="1";
-       }
-        var param="isChecked="+isCheckedFlag+"&"+"skuId="+skuId;
-        $.post("checkCart",param,function (data) {
-            sumSumPrice();
+        var skuId= $(chkbox).attr("value");
+        var checked=$(chkbox).prop("checked");
+        var isCheckedFlag="0";
+        if(checked){
+            isCheckedFlag="1";
+        }
+        $.post("checkCart","isChecked="+isCheckedFlag+"&"+"skuId="+skuId,function (html) {
+            // 服务会返回一个inner内嵌页面给ajax，我们返回的新的页面刷新替换掉原来的老的页面
+            $("#cartListInner").html(html);
         });
 
     }
 
-     //封装总价钱函数
-     function sumSumPrice(){
+    //封装总价钱函数
+    function sumSumPrice(){
 //         var zzj=0;
 //         $(".check").each(function () {
 //             if($(this).prop("checked")){
@@ -301,16 +203,16 @@
 //             }
 //             $(".fnt").html("￥"+zzj+".00")
 //         });
-     }
+    }
 
-/*    //购物车结算固定定位
-    $(document).scroll(function(){
-        if($(window).scrollTop()>50){
-            $(".fix").hide();
-        }else{
-            $(".fix").show();
-        }
-    })*/
+    /*    //购物车结算固定定位
+        $(document).scroll(function(){
+            if($(window).scrollTop()>50){
+                $(".fix").hide();
+            }else{
+                $(".fix").show();
+            }
+        })*/
 
 
     //购物车顶端tab
@@ -476,19 +378,19 @@
         // })
         //var that=$(this);
         //确定删除
-  /*      $(".One_isDel>div:last-child button:first-child").click(function(){
-            $(".One_mb").hide();    //蒙版隐藏
-            $(".One_isDel").hide(); //删除弹框隐藏
-            $(".check:checked").parent().parent().parent().parent().remove();  //删除选中商品
-            if($(".fix").offset().top>$(".fix1").offset().top){
-                $(".fix").hide();
-            }
-            if($(".check").length==0){
-                $(".allCheck").prop("checked",false);
-                $(".sumNum").html("0");
-                $(".fnt").html("￥ 0.00");
-            }
-        })*/
+        /*      $(".One_isDel>div:last-child button:first-child").click(function(){
+                  $(".One_mb").hide();    //蒙版隐藏
+                  $(".One_isDel").hide(); //删除弹框隐藏
+                  $(".check:checked").parent().parent().parent().parent().remove();  //删除选中商品
+                  if($(".fix").offset().top>$(".fix1").offset().top){
+                      $(".fix").hide();
+                  }
+                  if($(".check").length==0){
+                      $(".allCheck").prop("checked",false);
+                      $(".sumNum").html("0");
+                      $(".fnt").html("￥ 0.00");
+                  }
+              })*/
     })
     //确定删除弹框移入我的关注
     $(".One_isDel>div:last-child button:last-child").click(function(){
@@ -613,30 +515,30 @@
         $(".One_isDel").show();
         var that=$(this);
         //确定删除
-/*        $(".One_isDel>div:last-child button:first-child").click(function(){
-            $(".One_mb").hide();
-            $(".One_isDel").hide();
-            that.parent().parent().parent().parent().remove();
-            // 移除结账固定定位
-            // if($(".check").length==1){
-            // 	$(".fix").remove();
-            // }
+        /*        $(".One_isDel>div:last-child button:first-child").click(function(){
+                    $(".One_mb").hide();
+                    $(".One_isDel").hide();
+                    that.parent().parent().parent().parent().remove();
+                    // 移除结账固定定位
+                    // if($(".check").length==1){
+                    // 	$(".fix").remove();
+                    // }
+                    if($(".fix").offset().top>$(".fix1").offset().top){
+                        $(".fix").hide();
+                    }
+                    if($(".check").length==0){
+                        $(".allCheck").prop("checked",false);
+                        $(".sumNum").html("0");
+                        $(".fnt").html("￥ 0.00");
+                    }
+                })*/
+    })
+    /*    //页面滚动删除去结算固定定位隐藏
+        $(document).scroll(function(){
             if($(".fix").offset().top>$(".fix1").offset().top){
                 $(".fix").hide();
             }
-            if($(".check").length==0){
-                $(".allCheck").prop("checked",false);
-                $(".sumNum").html("0");
-                $(".fnt").html("￥ 0.00");
-            }
         })*/
-    })
-/*    //页面滚动删除去结算固定定位隐藏
-    $(document).scroll(function(){
-        if($(".fix").offset().top>$(".fix1").offset().top){
-            $(".fix").hide();
-        }
-    })*/
     $(".One_isDel>div:last-child button").mouseover(function(){
         $(this).css("cursor","pointer");
     })
@@ -663,10 +565,10 @@
             $(".fnt").html("￥"+zzj+".00")
         })
 
-/*        $(".One_ShopCon ul li>div:nth-child(2) ol li:nth-child(5) .zj").each(function(){
-            kong+=parseFloat($(this).html().substring(1))
-        })
-        $(".fnt").html("￥"+kong+".00")*/
+        /*        $(".One_ShopCon ul li>div:nth-child(2) ol li:nth-child(5) .zj").each(function(){
+                    kong+=parseFloat($(this).html().substring(1))
+                })
+                $(".fnt").html("￥"+kong+".00")*/
     }
     //封装总数量函数
     function sumSumNum(){

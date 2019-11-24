@@ -28,7 +28,7 @@ public class SearchController {
     }
 
     @RequestMapping("list.html")
-    public ModelAndView list(PmsSearchParam pmsSearchParam, ModelMap modelMap) {// 三级分类id、关键字、
+    public ModelAndView list(PmsSearchParam pmsSearchParam, ModelMap modelMap) { // 三级分类id、关键字、
 
         // 调用搜索服务，从 ES 中搜索，返回搜索结果
         List<PmsSearchSkuInfo> pmsSearchSkuInfos = searchService.list(pmsSearchParam);

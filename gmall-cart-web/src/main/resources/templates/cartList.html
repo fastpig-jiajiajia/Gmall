@@ -94,7 +94,7 @@
                 <li>删除商品？</li>
                 <li>您可以选择移到关注，或删除商品。</li>
             </dd>
-        </dl>
+            </dl>
     </div>
     <div>
         <button type="button">删除</button>
@@ -121,7 +121,7 @@
                 <li>移到关注</li>
                 <li>移动后选中商品将不再购物车中显示</li>
             </dd>
-        </dl>
+            </dl>
     </div>
     <div>
         <button type="button">确定</button>
@@ -167,25 +167,25 @@
 <script src="/js/index.js" charset="utf-8"></script>
 <script type="text/javascript">
 
-    function toTrade(){
-        window.location.href="http://cart.gmall.com:8084/toTrade";
+     function toTrade(){
+         window.location.href="http://order.gmall.com:8086/toTrade";
     }
     function toItem(skuId) {
         window.location.href="http://item.gmall.com:8084/"+skuId+".html";
     }
 
     function login(){
-        var s = encodeURIComponent("http://cart.gmall.com:8087/cartList");
-        window.location.href="http://passport.atguigu.com/index?originUrl="+s;
+      var s = encodeURIComponent("http://cart.gmall.com:8087/cartList");
+       window.location.href="http://passport.atguigu.com/index?originUrl="+s;
     }
 
     function checkSku( chkbox){
-        var skuId= $(chkbox).attr("value");
-        var checked=$(chkbox).prop("checked");
-        var isCheckedFlag="0";
-        if(checked){
-            isCheckedFlag="1";
-        }
+       var skuId= $(chkbox).attr("value");
+       var checked=$(chkbox).prop("checked");
+       var isCheckedFlag="0";
+       if(checked){
+           isCheckedFlag="1";
+       }
         $.post("checkCart","isChecked="+isCheckedFlag+"&"+"skuId="+skuId,function (html) {
             // 服务会返回一个inner内嵌页面给ajax，我们返回的新的页面刷新替换掉原来的老的页面
             $("#cartListInner").html(html);
@@ -193,8 +193,8 @@
 
     }
 
-    //封装总价钱函数
-    function sumSumPrice(){
+     //封装总价钱函数
+     function sumSumPrice(){
 //         var zzj=0;
 //         $(".check").each(function () {
 //             if($(this).prop("checked")){
@@ -203,16 +203,16 @@
 //             }
 //             $(".fnt").html("￥"+zzj+".00")
 //         });
-    }
+     }
 
-    /*    //购物车结算固定定位
-        $(document).scroll(function(){
-            if($(window).scrollTop()>50){
-                $(".fix").hide();
-            }else{
-                $(".fix").show();
-            }
-        })*/
+/*    //购物车结算固定定位
+    $(document).scroll(function(){
+        if($(window).scrollTop()>50){
+            $(".fix").hide();
+        }else{
+            $(".fix").show();
+        }
+    })*/
 
 
     //购物车顶端tab
@@ -378,19 +378,19 @@
         // })
         //var that=$(this);
         //确定删除
-        /*      $(".One_isDel>div:last-child button:first-child").click(function(){
-                  $(".One_mb").hide();    //蒙版隐藏
-                  $(".One_isDel").hide(); //删除弹框隐藏
-                  $(".check:checked").parent().parent().parent().parent().remove();  //删除选中商品
-                  if($(".fix").offset().top>$(".fix1").offset().top){
-                      $(".fix").hide();
-                  }
-                  if($(".check").length==0){
-                      $(".allCheck").prop("checked",false);
-                      $(".sumNum").html("0");
-                      $(".fnt").html("￥ 0.00");
-                  }
-              })*/
+  /*      $(".One_isDel>div:last-child button:first-child").click(function(){
+            $(".One_mb").hide();    //蒙版隐藏
+            $(".One_isDel").hide(); //删除弹框隐藏
+            $(".check:checked").parent().parent().parent().parent().remove();  //删除选中商品
+            if($(".fix").offset().top>$(".fix1").offset().top){
+                $(".fix").hide();
+            }
+            if($(".check").length==0){
+                $(".allCheck").prop("checked",false);
+                $(".sumNum").html("0");
+                $(".fnt").html("￥ 0.00");
+            }
+        })*/
     })
     //确定删除弹框移入我的关注
     $(".One_isDel>div:last-child button:last-child").click(function(){
@@ -515,30 +515,30 @@
         $(".One_isDel").show();
         var that=$(this);
         //确定删除
-        /*        $(".One_isDel>div:last-child button:first-child").click(function(){
-                    $(".One_mb").hide();
-                    $(".One_isDel").hide();
-                    that.parent().parent().parent().parent().remove();
-                    // 移除结账固定定位
-                    // if($(".check").length==1){
-                    // 	$(".fix").remove();
-                    // }
-                    if($(".fix").offset().top>$(".fix1").offset().top){
-                        $(".fix").hide();
-                    }
-                    if($(".check").length==0){
-                        $(".allCheck").prop("checked",false);
-                        $(".sumNum").html("0");
-                        $(".fnt").html("￥ 0.00");
-                    }
-                })*/
-    })
-    /*    //页面滚动删除去结算固定定位隐藏
-        $(document).scroll(function(){
+/*        $(".One_isDel>div:last-child button:first-child").click(function(){
+            $(".One_mb").hide();
+            $(".One_isDel").hide();
+            that.parent().parent().parent().parent().remove();
+            // 移除结账固定定位
+            // if($(".check").length==1){
+            // 	$(".fix").remove();
+            // }
             if($(".fix").offset().top>$(".fix1").offset().top){
                 $(".fix").hide();
             }
+            if($(".check").length==0){
+                $(".allCheck").prop("checked",false);
+                $(".sumNum").html("0");
+                $(".fnt").html("￥ 0.00");
+            }
         })*/
+    })
+/*    //页面滚动删除去结算固定定位隐藏
+    $(document).scroll(function(){
+        if($(".fix").offset().top>$(".fix1").offset().top){
+            $(".fix").hide();
+        }
+    })*/
     $(".One_isDel>div:last-child button").mouseover(function(){
         $(this).css("cursor","pointer");
     })
@@ -565,10 +565,10 @@
             $(".fnt").html("￥"+zzj+".00")
         })
 
-        /*        $(".One_ShopCon ul li>div:nth-child(2) ol li:nth-child(5) .zj").each(function(){
-                    kong+=parseFloat($(this).html().substring(1))
-                })
-                $(".fnt").html("￥"+kong+".00")*/
+/*        $(".One_ShopCon ul li>div:nth-child(2) ol li:nth-child(5) .zj").each(function(){
+            kong+=parseFloat($(this).html().substring(1))
+        })
+        $(".fnt").html("￥"+kong+".00")*/
     }
     //封装总数量函数
     function sumSumNum(){

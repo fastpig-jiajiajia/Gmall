@@ -121,6 +121,5 @@ public class SearchServiceImpl implements SearchService {
         searchSourceBuilder.size(20);
 
         return searchSourceBuilder.toString();
-
     }
 }

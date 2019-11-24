@@ -57,7 +57,8 @@ public class GmallSearchServiceApplicationTests {
 		for (PmsSkuInfo pmsSkuInfo : pmsSkuInfoList) {
 			PmsSearchSkuInfo pmsSearchSkuInfo = new PmsSearchSkuInfo();
 
-			BeanUtils.copyProperties(pmsSkuInfo,pmsSearchSkuInfo);
+			// 将一个类的值赋值到另一个类
+			BeanUtils.copyProperties(pmsSkuInfo, pmsSearchSkuInfo);
 
 			pmsSearchSkuInfo.setId(Long.parseLong(pmsSkuInfo.getId()));
 

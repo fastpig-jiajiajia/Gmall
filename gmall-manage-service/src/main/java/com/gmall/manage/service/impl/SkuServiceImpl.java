@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -116,7 +117,7 @@ public class SkuServiceImpl implements SkuService {
             pmsSkuInfo = JSON.parseObject(skuJson, PmsSkuInfo.class);
         }else{
             // 如果没有缓存，先查询 mysql，再存入缓存
-            // 设置分布式锁，设置带有效时间的键值对，只有在键值对失效后才可以进行对该键值对的设置
+            // 设置分布式锁，设置带有效时间的键值对，只有在键值对失效后才可以进行对该键值对的设置，设置成功返回 OK，否则返回 nil
             // 设置token，防止因访问数据库时间过长，导致redis锁失效，而其他请求设置redis分布式锁成功的情况下，
             // 自旋后误删其他请求的锁
             String token = UUID.randomUUID().toString();
@@ -182,6 +183,25 @@ public class SkuServiceImpl implements SkuService {
             pmsSkuInfo.setSkuAttrValueList(select);
         }
         return pmsSkuInfos;
+    }
+
+    @Override
+    public boolean checkPrice(String productSkuId, BigDecimal productPrice) {
+
+        boolean b = false;
+
+        PmsSkuInfo pmsSkuInfo = new PmsSkuInfo();
+        pmsSkuInfo.setId(productSkuId);
+        PmsSkuInfo pmsSkuInfo1 = pmsSkuInfoMapper.selectOne(pmsSkuInfo);
+
+        BigDecimal price = pmsSkuInfo1.getPrice();
+
+        if(price.compareTo(productPrice)==0){
+            b = true;
+        }
+
+
+        return b;
     }
 
 

@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.gmall.entity.UmsMember;
 import com.gmall.service.UserService;
+import com.gmall.util.CookieUtil;
 import com.gmall.util.HttpclientUtil;
 import com.gmall.util.JwtUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,12 +36,11 @@ public class PassportController {
 
     /**
      * 验证 token 真伪
-     * @param modelMap
      * @param request
      * @return
      */
     @RequestMapping("verify")
-    public String verify(String token,String currentIp, HttpServletRequest request){
+    public String verify(String token, String currentIp, HttpServletRequest request){
 
         // 通过jwt校验token真假
         Map<String,String> map = new HashMap<>();
@@ -47,7 +48,7 @@ public class PassportController {
         // 能解析成功就为真
         Map<String, Object> decode = JwtUtil.decode(token, "2019gmall0105", currentIp);
 
-        if(decode!=null){
+        if(decode != null){
             map.put("status","success");
             map.put("memberId",(String)decode.get("memberId"));
             map.put("nickname",(String)decode.get("nickname"));
@@ -65,7 +66,7 @@ public class PassportController {
      * @return
      */
     @RequestMapping("login")
-    public String login(UmsMember umsMember, HttpServletRequest request){
+    public String login(UmsMember umsMember, HttpServletRequest request, HttpServletResponse response){
 
         String token = "";
 
@@ -77,6 +78,8 @@ public class PassportController {
 
             // 生成jwt的token，并且重定向到首页，携带该token
             token = generateTokenByJWT(umsMember, request);
+            String str = request.getRequestURL().toString();
+            CookieUtil.setCookie(request, response, "oldToken", token, 60*60, true);
 
             // 将token存入redis一份
             userService.addUserToken(token, umsMember.getId());
@@ -162,8 +165,8 @@ public class PassportController {
     private String generateTokenByJWT(UmsMember umsMember, HttpServletRequest request){
         // 生成jwt的token，并且重定向到首页，携带该token
         String token = null;
-        String memberId = umsMember.getId();
-        String nickname = umsMember.getNickname();
+        String memberId = umsMember.getUsername();
+        String nickname = umsMember.getPassword();
         Map<String,Object> userMap = new HashMap<>();
         userMap.put("memberId", memberId);
         userMap.put("nickname", nickname);

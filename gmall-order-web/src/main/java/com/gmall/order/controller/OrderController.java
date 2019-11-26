@@ -13,6 +13,8 @@ import com.gmall.service.UserService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 public class OrderController {
 
     @Reference
@@ -135,7 +137,7 @@ public class OrderController {
 
     @RequestMapping("toTrade")
     @LoginRequired(loginSuccess = true)
-    public String toTrade(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
+    public ModelAndView toTrade(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
 
         String memberId = (String) request.getAttribute("memberId");
         String nickname = (String) request.getAttribute("nickname");
@@ -165,7 +167,7 @@ public class OrderController {
         // 生成交易码，为了在提交订单时做交易码的校验
         String tradeCode = orderService.genTradeCode(memberId);
         modelMap.put("tradeCode", tradeCode);
-        return "trade";
+        return new ModelAndView("trade");
     }
 
 

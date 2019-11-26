@@ -74,7 +74,7 @@ public class CartController {
      * @param modelMap
      * @return
      */
-    @RequestMapping("cartList")
+    @RequestMapping(value = {"cartList", "cartList.html"})
     @LoginRequired(loginSuccess = true)
     public ModelAndView cartList(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
         List<OmsCartItem> omsCartItemList = new ArrayList<>();
@@ -114,7 +114,7 @@ public class CartController {
      * @param session
      * @return
      */
-    @RequestMapping("addToCart")
+    @RequestMapping(value={"addToCart"})
     @LoginRequired(loginSuccess = false)
     public ModelAndView addToCart(String skuId, int quantity, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         List<OmsCartItem> omsCartItemList = new ArrayList<>();

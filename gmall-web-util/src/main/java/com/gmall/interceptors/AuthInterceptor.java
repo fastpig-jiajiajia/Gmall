@@ -66,17 +66,21 @@ public class AuthInterceptor implements HandlerInterceptor {
         // 得到发起请求的url，作为登陆成功后的跳转页面
         String returnUrl = request.getRequestURL().toString();
         if(loginRequired.loginSuccess()){
-            // 认证中心认证成功
-            if ("success".equals(success)) {
-                // 需要将token携带的用户信息写入
-                request.setAttribute("memberId", successMap.get("memberId"));
-                request.setAttribute("nickname", successMap.get("nickname"));
-                CookieUtil.setCookie(request, response, "oldToken", token, 60*60*72, true);
-                return true;
+            // 必须登录成功才能使用
+            if (!success.equals("success")) {
+                //重定向会passport登录
+                StringBuffer requestURL = request.getRequestURL();
+                response.sendRedirect("http://passport.gmall.com:8085/index?ReturnUrl="+requestURL);
+                return false;
             }
 
-            response.sendRedirect("http://passport.gmall.com:8085/index?ReturnUrl=" + returnUrl);
-            return false;
+            // 需要将token携带的用户信息写入
+            request.setAttribute("memberId", successMap.get("memberId"));
+            request.setAttribute("nickname", successMap.get("nickname"));
+            //验证通过，覆盖cookie中的token
+            if(StringUtils.isNotBlank(token)){
+                CookieUtil.setCookie(request,response,"oldToken",token,60*60*2,true);
+            }
         }else{
             // 已经是登录状态，覆写cookie token
             if ("success".equals(success)) {
@@ -87,8 +91,8 @@ public class AuthInterceptor implements HandlerInterceptor {
                     CookieUtil.setCookie(request, response, "oldToken", token, 60*60*72, true);
                 }
             }
-            return true;
         }
+        return true;
     }
 
     @Override

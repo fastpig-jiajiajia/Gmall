@@ -36,7 +36,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         // 指定拦截器类，指定拦截路径
-        registry.addInterceptor(AuthInterceptor()).addPathPatterns("/**").excludePathPatterns("/login", "/error", "/", "/css/**", "/js/**", "/img/**", "/media/**", "/vendors/**");
+        registry.addInterceptor(AuthInterceptor()).addPathPatterns("/**").excludePathPatterns("/error", "/css/**", "/js/**", "/img/**", "/media/**", "/vendors/**");
     }
 
     @Override

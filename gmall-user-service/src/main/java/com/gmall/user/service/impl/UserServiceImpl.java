@@ -73,7 +73,8 @@ public class UserServiceImpl implements UserService {
             }
             // 链接redis失败，开启数据库
             UmsMember umsMemberFromDb = loginFromDb(umsMember);
-            if(umsMemberFromDb!=null){
+            // 验证成功redis 保留一份
+            if(umsMemberFromDb != null){
                 jedis.setex("user:" + umsMember.getPassword() + ":info", 60*60*24, JSON.toJSONString(umsMemberFromDb));
             }
             return umsMemberFromDb;
@@ -119,6 +120,11 @@ public class UserServiceImpl implements UserService {
         jedis.close();
     }
 
+    /**
+     * 从数据库验证用户数据
+     * @param umsMember
+     * @return
+     */
     private UmsMember loginFromDb(UmsMember umsMember) {
         List<UmsMember> umsMembers  = new ArrayList<>();
         umsMembers = userMapper.select(umsMember);

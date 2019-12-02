@@ -121,7 +121,8 @@ public class SkuServiceImpl implements SkuService {
             // 设置token，防止因访问数据库时间过长，导致redis锁失效，而其他请求设置redis分布式锁成功的情况下，
             // 自旋后误删其他请求的锁
             String token = UUID.randomUUID().toString();
-            String OK = shardedJedis.set("sku:" + skuId + ":lock", token, "nx", "px", 10*1000);
+            String skuLock = "sku:" + skuId + ":lock";
+            String OK = shardedJedis.set(skuLock, token, "nx", "px", 10*1000);
             if(StringUtils.isNotBlank(OK) && OK.equals("OK")) {
                 // 设置成功有权在 10 秒的过期时间内访问数据库
                 pmsSkuInfo = getSkuByFromDb(skuId);
@@ -138,7 +139,7 @@ public class SkuServiceImpl implements SkuService {
                 // 获得设置分布式锁的值，防止误删
                 // 用lua脚本，在查询到key的同时删除该key，防止高并发下的意外的发生
                 String script ="if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-                jedis.eval(script, Collections.singletonList("lock"),Collections.singletonList(token));
+                jedis.eval(script, Collections.singletonList(skuLock), Collections.singletonList(token));
                 // 在高并发下，可能存在获取锁时锁未过期，但是在删除时锁已过期的可能
                 String lockToken = shardedJedis.get("sku:" + skuId + ":lock");
                 if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){

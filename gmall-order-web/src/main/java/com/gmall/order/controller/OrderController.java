@@ -135,6 +135,14 @@ public class OrderController {
     }
 
 
+    /**
+     * 结算页面
+     * @param request
+     * @param response
+     * @param session
+     * @param modelMap
+     * @return
+     */
     @RequestMapping("toTrade")
     @LoginRequired(loginSuccess = true)
     public ModelAndView toTrade(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {

@@ -49,9 +49,9 @@ public class PassportController {
         Map<String, Object> decode = JwtUtil.decode(token, "2019gmall0105", currentIp);
 
         if(decode != null){
-            map.put("status","success");
-            map.put("memberId",(String)decode.get("memberId"));
-            map.put("nickname",(String)decode.get("nickname"));
+            map.put("status", "success");
+            map.put("memberId", (String)decode.get("memberId"));
+            map.put("nickname", (String)decode.get("nickname"));
         }else{
             map.put("status","fail");
         }
@@ -79,7 +79,7 @@ public class PassportController {
             // 生成jwt的token，并且重定向到首页，携带该token
             token = generateTokenByJWT(umsMember, request);
             String str = request.getRequestURL().toString();
-            CookieUtil.setCookie(request, response, "oldToken", token, 60*60, true);
+        //    CookieUtil.setCookie(request, response, "oldToken", token, 60*60, true);
 
             // 将token存入redis一份
             userService.addUserToken(token, umsMember.getId());
@@ -162,6 +162,12 @@ public class PassportController {
     }
 
 
+    /**
+     * JWT 生成 token
+     * @param umsMember
+     * @param request
+     * @return
+     */
     private String generateTokenByJWT(UmsMember umsMember, HttpServletRequest request){
         // 生成jwt的token，并且重定向到首页，携带该token
         String token = null;

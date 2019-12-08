@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * 用户基本信息表
  */
-public class UmsMember implements Serializable{
+public class UmsMember implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

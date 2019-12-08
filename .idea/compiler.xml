@@ -12,6 +12,7 @@
         <module name="gmall-cart-service" />
         <module name="gmall-cart-web" />
         <module name="gmall-common-util" />
+        <module name="gmall-inventory-manage" />
         <module name="gmall-item-web" />
         <module name="gmall-manage-service" />
         <module name="gmall-manage-web" />
@@ -23,6 +24,7 @@
         <module name="gmall-redisson-test" />
         <module name="gmall-search-service" />
         <module name="gmall-search-web" />
+        <module name="gmall-seckill" />
         <module name="gmall-service-util" />
         <module name="gmall-user" />
         <module name="gmall-user-service" />
@@ -38,6 +40,7 @@
       <module name="gmall-cart-service" target="1.8" />
       <module name="gmall-cart-web" target="1.8" />
       <module name="gmall-common-util" target="1.8" />
+      <module name="gmall-inventory-manage" target="1.8" />
       <module name="gmall-item-web" target="1.8" />
       <module name="gmall-manage-service" target="1.8" />
       <module name="gmall-manage-web" target="1.8" />
@@ -50,6 +53,7 @@
       <module name="gmall-redisson-test" target="1.8" />
       <module name="gmall-search-service" target="1.8" />
       <module name="gmall-search-web" target="1.8" />
+      <module name="gmall-seckill" target="1.8" />
       <module name="gmall-service-util" target="1.8" />
       <module name="gmall-user" target="1.8" />
       <module name="gmall-user-service" target="1.8" />

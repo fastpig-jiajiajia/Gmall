@@ -63,6 +63,7 @@ public class CookieUtil {
                 cookie.setDomain(getDomainName(request));
             // 在域名的根路径下保存
             cookie.setPath("/");
+            cookie.setHttpOnly(true);
             response.addCookie(cookie);
         } catch (Exception e) {
             e.printStackTrace();

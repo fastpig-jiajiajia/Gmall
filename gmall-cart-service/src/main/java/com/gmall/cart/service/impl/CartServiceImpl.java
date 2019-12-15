@@ -4,17 +4,17 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.gmall.cart.mapper.OmsCartItemMapper;
 import com.gmall.entity.OmsCartItem;
+import com.gmall.entity.OmsOrderItem;
 import com.gmall.service.CartService;
 import com.gmall.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import tk.mybatis.mapper.entity.Example;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -135,6 +135,27 @@ public class CartServiceImpl implements CartService {
 
         // 缓存同步
         flushCartCache(omsCartItem.getMemberId());
+
+    }
+
+    @Override
+    public void mergeCart(List<OmsCartItem> cookieCartList, String memberId) {
+        if(cookieCartList != null){
+            for(OmsCartItem omsCartItem : cookieCartList){
+                OmsCartItem cartItem = new OmsCartItem();
+                cartItem.setProductSkuId(omsCartItem.getProductSkuId());
+                cartItem.setMemberId(memberId);
+                OmsCartItem cartItem1 = omsCartItemMapper.selectOne(cartItem);
+                if(cartItem1 != null){
+                    Example example = new Example(OmsCartItem.class);
+                    example.createCriteria().andEqualTo("id", cartItem.getId());
+                    cartItem1.setQuantity(cartItem1.getQuantity().add(omsCartItem.getQuantity()));
+                    omsCartItemMapper.updateByExampleSelective(omsCartItem, example);
+                }else{
+                    omsCartItemMapper.insertSelective(omsCartItem);
+                }
+            }
+        }
 
     }
 }

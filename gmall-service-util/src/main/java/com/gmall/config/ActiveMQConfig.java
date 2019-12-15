@@ -1,5 +1,6 @@
-package com.gmall.util;
+package com.gmall.config;
 
+import com.gmall.util.ActiveMQUtil;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +20,7 @@ public class ActiveMQConfig {
     String listenerEnable;
 
     @Bean
-    public    ActiveMQUtil   getActiveMQUtil() throws JMSException {
+    public ActiveMQUtil getActiveMQUtil() throws JMSException {
         if(brokerURL.equals("disabled")){
             return null;
         }

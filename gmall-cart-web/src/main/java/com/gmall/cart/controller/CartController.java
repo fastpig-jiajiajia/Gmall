@@ -75,17 +75,25 @@ public class CartController {
      * @return
      */
     @RequestMapping(value = {"cartList", "cartList.html"})
-    @LoginRequired(loginSuccess = true)
+    @LoginRequired(loginSuccess = false)
     public ModelAndView cartList(HttpServletRequest request, HttpServletResponse response, HttpSession session, ModelMap modelMap) {
         List<OmsCartItem> omsCartItemList = new ArrayList<>();
-        String memberId = "1";
+        String memberId = (String) request.getAttribute("memberId");
+
+        // 获取cookie 中的值
+        String cookieCart = CookieUtil.getCookieValue(request, "cartListCookie", false);
 
         if("1".equals(memberId)){
+           List<OmsCartItem> cookieCartList = new ArrayList<>();
+            if(StringUtils.isNotBlank(cookieCart)){
+                cookieCartList = JSON.parseArray(cookieCart, OmsCartItem.class);
+                cartService.mergeCart(cookieCartList, memberId);
+                CookieUtil.deleteCookie(request, response, "cartListCookie");
+            }
             omsCartItemList = cartService.cartList(memberId);
         }else{
-            String cookie = CookieUtil.getCookieValue(request, "cartListCookie", false);
-            if(StringUtils.isNotBlank(cookie)){
-                omsCartItemList = JSON.parseArray(cookie, OmsCartItem.class);
+            if(StringUtils.isNotBlank(cookieCart)){
+                omsCartItemList = JSON.parseArray(cookieCart, OmsCartItem.class);
             }
         }
 

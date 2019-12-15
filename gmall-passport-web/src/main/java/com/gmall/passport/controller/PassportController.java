@@ -2,28 +2,49 @@ package com.gmall.passport.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.gmall.entity.UmsMember;
 import com.gmall.service.UserService;
+import com.gmall.util.ActiveMQUtil;
 import com.gmall.util.CookieUtil;
 import com.gmall.util.HttpclientUtil;
 import com.gmall.util.JwtUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.Connection;
+import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.impl.AMQChannel;
+import org.apache.activemq.ScheduledMessage;
+import org.apache.activemq.command.ActiveMQMapMessage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.jms.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class PassportController {
 
     @Reference
     private UserService userService;
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+    @Autowired
+    private ActiveMQUtil activeMQUtil;
 
     @Value("${weibo.appKey.client_id}")
     private static String clientId = "546561297";
@@ -79,10 +100,14 @@ public class PassportController {
             // 生成jwt的token，并且重定向到首页，携带该token
             token = generateTokenByJWT(umsMember, request);
             String str = request.getRequestURL().toString();
-        //    CookieUtil.setCookie(request, response, "oldToken", token, 60*60, true);
-
+            CookieUtil.setCookie(request, response, "cartListCookie", CookieUtil.getCookieValue(request, "cartListCookie", true), 60*60*2, true);
+            CookieUtil.setCookie(request, response, "token", token, 60*60*2, true);
+            request.setAttribute("token", token);
             // 将token存入redis一份
             userService.addUserToken(token, umsMember.getId());
+            // 合并购物车
+            sendLoginMergeCartMessageByRabbitMQ();
+            sendLoginMergeCartMessageActiveMQ(token, 5);
 
         }else{
             // 登录失败
@@ -92,6 +117,12 @@ public class PassportController {
         return token;
     }
 
+    /**
+     * 登录页面
+     * @param ReturnUrl
+     * @param map
+     * @return
+     */
     @RequestMapping("index")
     public ModelAndView index(String ReturnUrl, ModelMap map){
 
@@ -99,9 +130,15 @@ public class PassportController {
         return new ModelAndView("index");
     }
 
-
+    /**
+     * 微博登录对接
+     * @param code
+     * @param request
+     * @param response
+     * @return
+     */
     @RequestMapping("vlogin")
-    public ModelAndView vlogin(String code, HttpServletRequest request){
+    public ModelAndView vlogin(String code, HttpServletRequest request, HttpServletResponse response){
 
         // 授权码换取access_token
         // 换取access_token
@@ -113,7 +150,7 @@ public class PassportController {
         paramMap.put("client_secret", clientSecret);
         paramMap.put("grant_type", grantType);
         paramMap.put("redirect_uri", redirectUri);
-        paramMap.put("code", code); // 授权有效期内可以使用，没新生成一次授权码，说明用户对第三方数据进行重启授权，之前的access_token和授权码全部过期
+        paramMap.put("code", code); // 授权有效期内可以使用，每新生成一次授权码，说明用户对第三方数据进行重启授权，之前的access_token和授权码全部过期
         String access_token_json = HttpclientUtil.doPost(s3, paramMap);
 
         Map<String,Object> access_map = JSON.parseObject(access_token_json,Map.class);
@@ -154,13 +191,27 @@ public class PassportController {
         // 生成jwt的token，并且重定向到首页，携带该token
         String token = generateTokenByJWT(umsMember, request);
 
+
         // 将token存入redis一份
         userService.addUserToken(token, umsMember.getId());
+        CookieUtil.setCookie(request, response, "cartListCookie", CookieUtil.getCookieValue(request, "cartListCookie", true), 60*60*2, true);
+        CookieUtil.setCookie(request, response, "token", token, 60*60*2, true);
 
-
+        // 合并购物车
+        sendLoginMergeCartMessageByRabbitMQ();
+        sendLoginMergeCartMessageActiveMQ(token, 5);
         return new ModelAndView("redirect:http://search.gmall.com:8083/index?token="+token);
     }
 
+    /**
+     * 单点登出
+     */
+    @RequestMapping("logout")
+    public ModelAndView singleLogout(HttpServletRequest request, HttpServletResponse response){
+        request.setAttribute("token", "");
+        CookieUtil.deleteCookie(request, response, "token");
+        return new ModelAndView("redirect:http://passport.gmall.com:8085/index");
+    }
 
     /**
      * JWT 生成 token
@@ -190,5 +241,91 @@ public class PassportController {
         token = JwtUtil.encode("2019gmall0105", userMap, ip);
 
         return token;
+    }
+
+    @RequestMapping(value = "sendLoginMergeCartMessage", method = RequestMethod.POST)
+    private void sendLoginMergeCartMessageByRabbitMQ(){
+        try{
+//            ConnectionFactory factory = new ConnectionFactory();
+//            factory.setHost("192.168.1.104");
+//            factory.setPort(5672);
+//            factory.setUsername("guest");
+//            factory.setPassword("guest");
+//            factory.setVirtualHost("/gmall");
+//            Connection connection = factory.newConnection();
+//            // 定义通道
+//            Channel channel = connection.createChannel();
+//            // 定义交换机名称
+//            String exchange_name = "topicExchange";
+//            // fanout是定义发布订阅模式  direct是 路由模式 topic是主题模式
+//            channel.exchangeDeclare(exchange_name, "topic", true);
+
+            String messageId = UUID.randomUUID().toString();
+            String messageData = "topic message queue";
+            String createTime = org.apache.http.client.utils.DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+            Map<String, Object> messageMap = new HashMap<>();
+            messageMap.put("messageId", messageId);
+            messageMap.put("messageData", messageData);
+            messageMap.put("createTime", createTime);
+
+//            channel.basicPublish(exchange_name, "gmall.#", null, JSONObject.toJSONString(messageMap).getBytes());
+//            channel.close();
+//            connection.close();
+
+            rabbitTemplate.convertAndSend("LOGIN_MERGECART_EXCHANGE", "gmall.#", JSONObject.toJSONString(messageMap));
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * ActiveMQ 延迟队列
+     * @param tradeNo
+     * @param count
+     */
+    @RequestMapping(value = "sendLoginMergeCartMessageActiveMQ", method = RequestMethod.POST)
+    public void sendLoginMergeCartMessageActiveMQ(String tradeNo, int count) {
+        javax.jms.Connection connection = null;
+        Session session = null;
+        try {
+            connection = activeMQUtil.getConnectionFactory().createConnection();
+            session = connection.createSession(true, Session.SESSION_TRANSACTED);
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+        try{
+            // 设置队列
+            Queue login_mergecart_queue = session.createQueue("LOGIN_MERGECART_QUEUE");
+            MessageProducer producer = session.createProducer(login_mergecart_queue);
+
+            //TextMessage textMessage=new ActiveMQTextMessage();//字符串文本
+
+            MapMessage mapMessage = new ActiveMQMapMessage();// hash结构
+
+            mapMessage.setString("tradeNo", tradeNo);
+            mapMessage.setInt("count", count);
+
+            // 为消息加入延迟时间
+            mapMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY,1000*60);
+
+            producer.send(mapMessage);
+
+            session.commit();
+        }catch (Exception ex){
+            // 消息回滚
+            try {
+                session.rollback();
+            } catch (JMSException e1) {
+                e1.printStackTrace();
+            }
+        }finally {
+            try {
+                connection.close();
+            } catch (JMSException e1) {
+                e1.printStackTrace();
+            }
+        }
     }
 }

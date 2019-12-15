@@ -22,12 +22,21 @@ public class PaymentServiceMqListener {
     @Reference
     PaymentService paymentService;
 
-    @JmsListener(destination = "PAYMENT_CHECK_QUEUE",containerFactory = "jmsQueueListener")
+    /**
+     * 延迟队列，检查支付状态，
+     * 从消息队列监听到消息后，调用支付接口查询用户支付状态
+     * 如果已支付，更新支付状态，
+     * 否则，自己个自己发延迟消息，再延迟时间过结束后，收到消息进行下一次检查。
+     * 注解参数：destination：队列名称，containFactory：配置类，监听器连接工厂 Bean 保持一致
+     * @param mapMessage
+     * @throws JMSException
+     */
+    @JmsListener(destination = "PAYMENT_CHECK_QUEUE", containerFactory = "jmsQueueListener")
     public void consumePaymentCheckResult(MapMessage mapMessage) throws JMSException {
         String out_trade_no = mapMessage.getString("out_trade_no");
         Integer count = 0;
         if(mapMessage.getString("count")!=null){
-            count = Integer.parseInt(""+mapMessage.getString("count"));
+            count = Integer.parseInt("" + mapMessage.getString("count"));
         }
 
         // 调用paymentService的支付宝检查接口
@@ -52,7 +61,7 @@ public class PaymentServiceMqListener {
             }
         }
 
-        if(count>0){
+        if(count > 0){
             // 继续发送延迟检查任务，计算延迟时间等
             System.out.println("没有支付成功，检查剩余次数为"+count+",继续发送延迟检查任务");
             count--;

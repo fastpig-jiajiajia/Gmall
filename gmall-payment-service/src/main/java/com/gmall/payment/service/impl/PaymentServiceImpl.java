@@ -155,7 +155,7 @@ public class PaymentServiceImpl implements PaymentService {
             MapMessage mapMessage = new ActiveMQMapMessage();// hash结构
 
             mapMessage.setString("out_trade_no",outTradeNo);
-            mapMessage.setInt("count",count);
+            mapMessage.setInt("count", count);
 
             // 为消息加入延迟时间
             mapMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY,1000*60);

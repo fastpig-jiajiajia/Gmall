@@ -36,7 +36,7 @@ public class TestOauth2 {
 
         // 2 返回授权码到回调地址
 
-        return null;
+        return s1;
     }
 
     /**

@@ -33,8 +33,8 @@ public class AuthInterceptor implements HandlerInterceptor {
         // 获取 token
         String token = "";
 
-        String oldToken = CookieUtil.getCookieValue(request, "oldToken", true);
-        if(StringUtils.isNotBlank("oldToken")){
+        String oldToken = CookieUtil.getCookieValue(request, "token", true);
+        if(StringUtils.isNotBlank(oldToken)){
             token = oldToken;
         }
         // 可以使用request 中的 token覆盖掉 cookie 的，因为cookie可能会过期，但是request的一定是最新的
@@ -78,9 +78,10 @@ public class AuthInterceptor implements HandlerInterceptor {
             request.setAttribute("memberId", successMap.get("memberId"));
             request.setAttribute("nickname", successMap.get("nickname"));
             request.setAttribute("token", token);
+            CookieUtil.setCookie(request, response, "cartListCookie", CookieUtil.getCookieValue(request, "cartListCookie", true), 60*60*2, true);
             //验证通过，覆盖cookie中的token
             if(StringUtils.isNotBlank(token)){
-                CookieUtil.setCookie(request,response,"oldToken",token,60*60*2,true);
+                CookieUtil.setCookie(request,response,"token", token,60*60*2,true);
             }
         }else{
             // 已经是登录状态，覆写cookie token
@@ -89,7 +90,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 request.setAttribute("memberId", successMap.get("memberId"));
                 request.setAttribute("nickname", successMap.get("nickname"));
                 if(StringUtils.isNotBlank(token)){
-                    CookieUtil.setCookie(request, response, "oldToken", token, 60*60*72, true);
+                    CookieUtil.setCookie(request, response, "token", token, 60*60*72, true);
                 }
             }
         }

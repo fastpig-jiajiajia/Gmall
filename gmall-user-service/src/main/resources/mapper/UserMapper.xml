@@ -7,5 +7,17 @@
     <select id="selectAllUser" resultType="com.gmall.entity.UmsMember">
         select t.*  from ums_member t
     </select>
+    
+    <select id="selectUserOfRoles" resultMap="selectUserOfRolesMap">
+        select a.*, b.*, a.id as user_id, c.id as role_id from ums_member a, ums_user_role b, ums_role c where a.id = b.userId and b.roleId = c.id and a.username=#{username}
+    </select>
+    
+    <resultMap id="selectUserOfRolesMap" type="com.gmall.entity.UmsMember">
+        <!-- column 数据库查询出的字段映射，id 主键 -->
+        <result column="user_id" property="id"></result>
+        <collection property="umsRoleList" ofType="com.gmall.entity.UmsRole" autoMapping="true">
+            <result column="role_id" property="id"></result>
+        </collection>
+    </resultMap>
 
 </mapper>

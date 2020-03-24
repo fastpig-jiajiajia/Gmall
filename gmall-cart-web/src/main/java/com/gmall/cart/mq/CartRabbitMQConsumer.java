@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Consumer 消费者接受消息
+ * Consumer 登录合并购物车；消费者接受消息
  *
  * @author xurui
  *

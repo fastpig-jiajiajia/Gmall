@@ -54,20 +54,19 @@ public class SecKillController {
     @ResponseBody
     public String kill(){
         Jedis jedis = redisUtil.getJedis();
-        // 开启商品的监控
+        // 开启商品的监控， 监视一或多个key,如果在事务执行之前，被监视的key被其他命令改动，则事务被打断
         jedis.watch("106");
         int stock = Integer.parseInt(jedis.get("106"));
-        if(stock>0){
+        if(stock > 0){
             Transaction multi = jedis.multi();
-            multi.incrBy("106",-1);
+            multi.incrBy("106", -1);
             List<Object> exec = multi.exec();
-            if(exec!=null&&exec.size()>0){
+            if(exec != null && exec.size() > 0){
                 System.out.println("当前库存剩余数量"+stock+",某用户抢购成功，当前抢购人数："+(1000-stock));
                 // 用消息队列发出订单消息
             }else {
                 System.out.println("当前库存剩余数量"+stock+",某用户抢购失败");
             }
-
         }
         jedis.close();
         return "1";

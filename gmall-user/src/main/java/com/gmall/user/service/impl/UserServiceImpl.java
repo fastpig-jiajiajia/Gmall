@@ -92,6 +92,31 @@
 //        jedis.close();
 //    }
 //
+//    @Override
+//    public UmsMember login(UmsMember umsMember) {
+//        return null;
+//    }
+//
+//    @Override
+//    public UmsMember checkOauthUser(UmsMember umsCheck) {
+//        return null;
+//    }
+//
+//    @Override
+//    public void addOauthUser(UmsMember umsMember) {
+//
+//    }
+//
+//    @Override
+//    public UmsMember getOauthUser(UmsMember umsMemberCheck) {
+//        return null;
+//    }
+//
+//    @Override
+//    public UmsMemberReceiveAddress getReceiveAddressById(String receiveAddressId) {
+//        return null;
+//    }
+//
 //    private UmsMember loginFromDb(UmsMember umsMember) {
 //
 //        List<UmsMember> umsMembers = userMapper.select(umsMember);

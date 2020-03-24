@@ -181,7 +181,7 @@ public class CartController {
             // 从数据库中根据 id 取出购物车的数据
             OmsCartItem omsCartItemFromDb = cartService.ifCartExistByUser(memberId,skuId);
 
-            // 如果数据库中存在数据
+            // 如果数据库中存在数据，就更新
             if(omsCartItemFromDb != null){
                 omsCartItemFromDb.setQuantity(omsCartItemFromDb.getQuantity().add(omsCartItem.getQuantity()));
                 cartService.updateCart(omsCartItemFromDb);

@@ -29,7 +29,7 @@ class GmallManageWebApplicationTests {
 		// meta_list: 文件的属性列表
 		String[] upLoadFiles = storageClient.upload_file("C:\\Users\\Administrator\\Desktop/1.png", "png", null);
 
-		String url = "http://192.168.1.104";
+		String url = "http://39.101.198.56";
 		for(String str : upLoadFiles){
 			url += "/" +  str;
 		}

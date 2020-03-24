@@ -39,6 +39,8 @@
         <jna.version>4.5.1</jna.version>
         <beanUtils.version>1.9.3</beanUtils.version>
         <redisson.version>3.10.5</redisson.version>
+        <guava.version>25.1-jre</guava.version>
+        <quartz.version>2.1.4.RELEASE</quartz.version>
     </properties>
 
     <dependencyManagement>
@@ -157,6 +159,21 @@
                 <version>${redisson.version}</version>
             </dependency>
 
+            <!-- 布隆过滤器 -->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+
+            <!-- quartz -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-quartz</artifactId>
+                <version>${quartz.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 
@@ -176,7 +193,7 @@
                 <version>0.4.13</version>
                 <configuration>
                     <!-- 生成的镜像名称 -->
-                    <imageName>192.168.1.104:5000/${project.artifactId}:${project.version}</imageName>
+                    <imageName>39.101.198.56:5000/${project.artifactId}:${project.version}</imageName>
                     <baseImage>jdk1.8</baseImage>
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <resources>
@@ -187,7 +204,7 @@
                             <include>${project.build.finalName}.jar</include>
                         </resource>
                     </resources>
-                    <dockerHost>http://192.168.1.104:2375</dockerHost>
+                    <dockerHost>http://39.101.198.56:2375</dockerHost>
                 </configuration>
             </plugin>
         </plugins>

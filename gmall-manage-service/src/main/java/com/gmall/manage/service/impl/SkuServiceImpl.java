@@ -13,12 +13,16 @@ import com.gmall.manage.mapper.PmsSkuInfoMapper;
 import com.gmall.manage.mapper.PmsSkuSaleAttrValueMapper;
 import com.gmall.service.SkuService;
 import com.gmall.util.RedisUtil;
+import com.google.common.hash.BloomFilter;
+import com.google.common.hash.Funnel;
+import com.google.common.hash.Funnels;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.ShardedJedis;
 
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -41,6 +45,11 @@ public class SkuServiceImpl implements SkuService {
 
     @Autowired
     private RedisUtil redisUtil;
+    /**
+     * 定义布隆过滤器
+     */
+    private static int bloomSize = 10000000;
+    private static BloomFilter<String> bloomFilter = BloomFilter.create(Funnels.stringFunnel(Charset.forName("utf-8")), bloomSize);
 
 
     @Override
@@ -92,8 +101,9 @@ public class SkuServiceImpl implements SkuService {
     }
 
     /**
+     * 更新：添加布隆过滤器，防止缓存穿透OK，布隆过滤器需要先将数据库的数据先 hash 进去
      * 实现思路，首先查询 redis，如果有值就直接从 redis 中查找（缓存穿透）；
-     * redis 中不存在值，先去数据库查询，在这个时候，redis 中是不存在值的，如果此时大量的并发请求进来同时访问一个数据，
+     * redis 中不存在值，再查询布隆过滤器，布隆过滤器显示数据库有值，再去数据库查询，在这个时候，redis 中是不存在值的，如果此时大量的并发请求进来同时访问一个数据，
      * 那么请求都会直接访问数据库，导致数据库的崩溃（缓存击穿）。
      * 解决方案：在 redis 设置分布式锁（设置该键值对在一定时间内不允许被修改），
      * 第一个设置成功的 会得到返回值 OK，其余的得到 nil 值，
@@ -116,47 +126,53 @@ public class SkuServiceImpl implements SkuService {
         if(StringUtils.isNotBlank(skuJson)){
             pmsSkuInfo = JSON.parseObject(skuJson, PmsSkuInfo.class);
         }else{
-            // 如果没有缓存，先查询 mysql，再存入缓存
+            // 如果没有缓存，先查询布隆过滤器
+            // 过滤器中存在，再查询 mysql，再存入缓存
             // 设置分布式锁，设置带有效时间的键值对，只有在键值对失效后才可以进行对该键值对的设置，设置成功返回 OK，否则返回 nil
             // 设置token，防止因访问数据库时间过长，导致redis锁失效，而其他请求设置redis分布式锁成功的情况下，
             // 自旋后误删其他请求的锁
-            String token = UUID.randomUUID().toString();
-            String skuLock = "sku:" + skuId + ":lock";
-            String OK = shardedJedis.set(skuLock, token, "nx", "px", 10*1000);
-            if(StringUtils.isNotBlank(OK) && OK.equals("OK")) {
-                // 设置成功有权在 10 秒的过期时间内访问数据库
-                pmsSkuInfo = getSkuByFromDb(skuId);
-                if(pmsSkuInfo != null) {
-                    // mysql 查询结果存入 redis
-                    shardedJedis.set("sku:" + skuId + ":info", JSON.toJSONString(pmsSkuInfo));
-                }else {
-                    // 数据库中不存在该 sku
-                    // 为了防止缓存穿透，将null 或者空字符串设置给 redis
-                    shardedJedis.setex("sku:" + skuId + ":info", 60*3, JSON.toJSONString(""));
+            if(bloomFilter.mightContain(skuKey)){
+                String token = UUID.randomUUID().toString();
+                String skuLock = "sku:" + skuId + ":lock";
+                String OK = shardedJedis.set(skuLock, token, "nx", "px", 10*1000);
+                if(StringUtils.isNotBlank(OK) && "OK".equals(OK)) {
+                    // 设置成功有权在 10 秒的过期时间内访问数据库
+                    pmsSkuInfo = getSkuByFromDb(skuId);
+                    if(pmsSkuInfo != null) {
+                        // mysql 查询结果存入 redis
+                        shardedJedis.set("sku:" + skuId + ":info", JSON.toJSONString(pmsSkuInfo));
+                        // 将值设置到布隆过滤器中
+                        bloomFilter.put("sku:" + skuId + ":info");
+                    }else {
+                        // 数据库中不存在该 sku
+                        // 为了防止缓存穿透，将null 或者空字符串设置给 redis
+                        shardedJedis.setex("sku:" + skuId + ":info", 60*3, JSON.toJSONString(""));
+                    }
+
+                    // 在访问mysql后，将 redis 的分布锁释放
+                    // 获得设置分布式锁的值，防止误删
+                    // 用lua脚本，在查询到key的同时删除该key，防止高并发下的意外的发生
+                    String script ="if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
+                    jedis.eval(script, Collections.singletonList(skuLock), Collections.singletonList(token));
+                    // 在高并发下，可能存在获取锁时锁未过期，但是在删除时锁已过期的可能
+                    String lockToken = shardedJedis.get("sku:" + skuId + ":lock");
+                    if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){
+                        shardedJedis.del("sku:" + skuId + ":lock");// 用token确认删除的是自己的sku的锁
+                    }
+                }else{
+                    // 设置失败，睡眠3 秒，3 秒后再次进行尝试设置值
+                    // 自旋（该线程在睡眠几秒后，重新尝试本地方法）
+                    try {
+                        Thread.sleep(3000);
+                    }catch(Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                // 在访问mysql后，将 redis 的分布锁释放
-                // 获得设置分布式锁的值，防止误删
-                // 用lua脚本，在查询到key的同时删除该key，防止高并发下的意外的发生
-                String script ="if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end";
-                jedis.eval(script, Collections.singletonList(skuLock), Collections.singletonList(token));
-                // 在高并发下，可能存在获取锁时锁未过期，但是在删除时锁已过期的可能
-                String lockToken = shardedJedis.get("sku:" + skuId + ":lock");
-                if(StringUtils.isNotBlank(lockToken)&&lockToken.equals(token)){
-                    shardedJedis.del("sku:" + skuId + ":lock");// 用token确认删除的是自己的sku的锁
-                }
-            }else{
-                // 设置失败，睡眠3 秒，3 秒后再次进行尝试设置值
-                // 自旋（该线程在睡眠几秒后，重新尝试本地方法）
-                try {
-                    Thread.sleep(3000);
-                }catch(Exception e) {
-                    e.printStackTrace();
-                }
+                // 必须用 return，否则会重新开辟一个线程。
+                return getSkuById(skuId, "");
             }
 
-            // 必须用 return，否则会重新开辟一个线程。
-            return getSkuById(skuId, "");
         }
         shardedJedis.close();
         jedis.close();

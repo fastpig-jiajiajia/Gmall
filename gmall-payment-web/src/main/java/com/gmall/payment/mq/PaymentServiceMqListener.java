@@ -35,7 +35,7 @@ public class PaymentServiceMqListener {
     public void consumePaymentCheckResult(MapMessage mapMessage) throws JMSException {
         String out_trade_no = mapMessage.getString("out_trade_no");
         Integer count = 0;
-        if(mapMessage.getString("count")!=null){
+        if(mapMessage.getString("count") != null){
             count = Integer.parseInt("" + mapMessage.getString("count"));
         }
 
@@ -46,7 +46,7 @@ public class PaymentServiceMqListener {
         if(resultMap!=null&&!resultMap.isEmpty()){
             String trade_status = (String)resultMap.get("trade_status");
             // 根据查询的支付状态结果，判断是否进行下一次的延迟任务还是支付成功更新数据和后续任务
-            if(StringUtils.isNotBlank(trade_status)&&trade_status.equals("TRADE_SUCCESS")){
+            if(StringUtils.isNotBlank(trade_status) && trade_status.equals("TRADE_SUCCESS")){
                 // 支付成功，更新支付发送支付队列
                 PaymentInfo paymentInfo = new PaymentInfo();
                 paymentInfo.setOrderSn(out_trade_no);
@@ -65,7 +65,7 @@ public class PaymentServiceMqListener {
             // 继续发送延迟检查任务，计算延迟时间等
             System.out.println("没有支付成功，检查剩余次数为"+count+",继续发送延迟检查任务");
             count--;
-            paymentService.sendDelayPaymentResultCheckQueue(out_trade_no,count);
+            paymentService.sendDelayPaymentResultCheckQueue(out_trade_no, count);
         }else{
             System.out.println("检查剩余次数用尽，结束检查");
         }

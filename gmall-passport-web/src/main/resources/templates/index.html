@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en"  xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en"  xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
 	<meta charset="utf-8" />
 	<link rel="stylesheet" type="text/css" href="/css/gm1.css"/>
@@ -30,7 +32,18 @@
 
 		<div class="si_cen">
 			<h2 class="act btn1">用户登录</h2>
+		</div>
 
+		<div sec:authorize="isAuthenticated()">
+			<p>已有用户登录</p>
+			<p>登录者:<span sec:authentication="name"></span></p>
+			<p>角色:<span sec:authentication="principal.authorities"></span></p>
+		</div>
+
+		<div sec:authorize="hasRole('admin')">
+			<p>已有用户登录</p>
+			<p>登录者:<span sec:authentication="name"></span></p>
+			<p>角色:<span sec:authentication="principal.authorities"></span></p>
 		</div>
 
 		<div class="si_bom1 tab" style="display: block;">
@@ -38,7 +51,7 @@
 				请输入账户名和密码
 			</div>
 
-			<form id="loginForm" action="./login" method="post">
+			<input id="loginForm" action="./login" method="post">
 				<ul>
 					<li class="top_1">
 						<img src="/img/user_03.png" class="err_img1"/>
@@ -56,6 +69,7 @@
 					<li class="ent"><button id="btn2" type="button" class="btn2"><a href="javascript:submitLogin();" class="a">登 &nbsp; &nbsp;录</a></button></li>
 
 				</ul>
+				<input type="checkbox" name="remember" /> 记住我
 				<input type="hidden" id="originUrl" name="originUrl" th:value="${originUrl}"/>
 			</form>
 		</div>

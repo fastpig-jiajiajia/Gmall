@@ -5,6 +5,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 用户基本信息表
@@ -35,6 +36,15 @@ public class UmsMember implements Serializable {
     private String sourceUid;
     private String accessToken;
     private String accessCode;
+    private List<UmsRole> umsRoleList;
+
+    public List<UmsRole> getUmsRoleList() {
+        return umsRoleList;
+    }
+
+    public void setUmsRoleList(List<UmsRole> umsRoleList) {
+        this.umsRoleList = umsRoleList;
+    }
 
     public String getGender() {
         return gender;

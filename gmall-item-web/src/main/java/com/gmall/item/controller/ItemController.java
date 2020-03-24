@@ -72,12 +72,13 @@ public class ItemController {
         // 如果是通过 Nginx 进行反向代理，得到是 Nginx 的 ip
         request.getHeader("");
 
+        // 去 redis 中查询值，查到返回，查不到从数据库查再设置到 redis
         PmsSkuInfo pmsSkuInfo = skuService.getSkuById(skuId, "");
         modelMap.put("skuInfo", pmsSkuInfo);
 
         //销售属性列表
         List<PmsProductSaleAttr> pmsProductSaleAttrs = spuService.spuSaleAttrListCheckBySku(pmsSkuInfo.getProductId(),pmsSkuInfo.getId());
-        modelMap.put("spuSaleAttrListCheckBySku",pmsProductSaleAttrs);
+        modelMap.put("spuSaleAttrListCheckBySku", pmsProductSaleAttrs);
 
         // 查询当前sku所属的商品的其他的sku列表，放到页面缓存，减少查询
         Map<String, String> skuSaleAttrMap = new HashMap<>();

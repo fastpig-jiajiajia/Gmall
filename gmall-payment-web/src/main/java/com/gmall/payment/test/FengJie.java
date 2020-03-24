@@ -7,7 +7,7 @@ import javax.jms.*;
 
 public class FengJie {
     public static void main(String[] args) {
-        ConnectionFactory connect = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,ActiveMQConnection.DEFAULT_PASSWORD,"tcp://192.168.1.104:61616");
+        ConnectionFactory connect = new ActiveMQConnectionFactory(ActiveMQConnection.DEFAULT_USER,ActiveMQConnection.DEFAULT_PASSWORD,"tcp://39.101.198.56:61616");
         try {
             Connection connection = connect.createConnection();
             connection.start();

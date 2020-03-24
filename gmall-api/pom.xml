@@ -40,7 +40,7 @@
                 <version>0.4.13</version>
                 <configuration>
                     <!-- 生成的镜像名称 -->
-                    <imageName>192.168.1.104:5000/${project.artifactId}:${project.version}</imageName>
+                    <imageName>39.101.198.56:5000/${project.artifactId}:${project.version}</imageName>
                     <baseImage>jdk1.8</baseImage>
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <resources>
@@ -51,7 +51,7 @@
                             <include>${project.build.finalName}.jar</include>
                         </resource>
                     </resources>
-                    <dockerHost>http://192.168.1.104:2375</dockerHost>
+                    <dockerHost>http://39.101.198.56:2375</dockerHost>
                 </configuration>
             </plugin>
         </plugins>

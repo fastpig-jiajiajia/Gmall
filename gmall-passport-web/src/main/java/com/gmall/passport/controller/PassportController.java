@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.jms.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.CommonDataSource;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,7 +62,7 @@ public class PassportController {
      * @return
      */
     @RequestMapping("verify")
-    public String verify(String token, String currentIp, HttpServletRequest request){
+        public String verify(String token, String currentIp, HttpServletRequest request){
 
         // 通过jwt校验token真假
         Map<String,String> map = new HashMap<>();
@@ -246,19 +247,19 @@ public class PassportController {
     @RequestMapping(value = "sendLoginMergeCartMessage", method = RequestMethod.POST)
     private void sendLoginMergeCartMessageByRabbitMQ(){
         try{
-//            ConnectionFactory factory = new ConnectionFactory();
-//            factory.setHost("192.168.1.104");
-//            factory.setPort(5672);
-//            factory.setUsername("guest");
-//            factory.setPassword("guest");
-//            factory.setVirtualHost("/gmall");
-//            Connection connection = factory.newConnection();
-//            // 定义通道
-//            Channel channel = connection.createChannel();
-//            // 定义交换机名称
-//            String exchange_name = "topicExchange";
-//            // fanout是定义发布订阅模式  direct是 路由模式 topic是主题模式
-//            channel.exchangeDeclare(exchange_name, "topic", true);
+            ConnectionFactory factory = new ConnectionFactory();
+            factory.setHost("39.101.198.56");
+            factory.setPort(5672);
+            factory.setUsername("guest");
+            factory.setPassword("guest");
+            factory.setVirtualHost("/gmall");
+            Connection connection = factory.newConnection();
+            // 定义通道
+            Channel channel = connection.createChannel();
+            // 定义交换机名称
+            String exchange_name = "topicExchange";
+            // fanout是定义发布订阅模式  direct是 路由模式 topic是主题模式
+            channel.exchangeDeclare(exchange_name, "topic", true);
 
             String messageId = UUID.randomUUID().toString();
             String messageData = "topic message queue";
@@ -268,6 +269,7 @@ public class PassportController {
             messageMap.put("messageData", messageData);
             messageMap.put("createTime", createTime);
 
+//            AMQP.Tx.CommitOk commitOk = channel.txCommit();.
 //            channel.basicPublish(exchange_name, "gmall.#", null, JSONObject.toJSONString(messageMap).getBytes());
 //            channel.close();
 //            connection.close();

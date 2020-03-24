@@ -12,7 +12,7 @@ public class PmsUploadUtil {
 
     public static String uploadImage(MultipartFile multipartFile) {
 
-        String imgUrl =  "http://192.168.1.104";
+        String imgUrl =  "http://39.101.198.56";
         String tracker = PmsUploadUtil.class.getResource("/tracker.conf").getPath();// 获得配置文件的路径
 
         // 上传图片到服务器

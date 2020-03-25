@@ -45,6 +45,19 @@
             <version>3.0.2.RELEASE</version>
         </dependency>
 
+        <!-- spring security 第三方登录 -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-openid</artifactId>
+            <version>3.2.1.RELEASE</version>
+        </dependency>
+
+        <!-- spring security oauth2 -->
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>

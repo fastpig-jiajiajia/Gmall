@@ -31,8 +31,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/index/**").hasRole("visitor")
                 .antMatchers("/search/**").hasRole("comsumer")
                 .antMatchers("/cart/**").hasRole("manager")
-                .and().formLogin().loginPage("/login").successHandler(loginSuccessHandler())
-                .and().logout().logoutUrl("/logout").invalidateHttpSession(true).
+                .antMatchers("/**").hasRole("visitor")
+                .and().openidLogin().loginProcessingUrl("http://passport.gmall.com:8085/index").successHandler(loginSuccessHandler())
+                .and().logout().logoutUrl("/logout/**").invalidateHttpSession(true).
                 deleteCookies("JSESSIONID").logoutSuccessHandler(logoutSuccessHandler());
 
         // 没有全限跳转登陆页面，配置登录功能，user 和 password 要和页面 name 对应
@@ -66,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UserServiceImpl userDetailService (){
         return new UserServiceImpl () ;
     }
+
     /**
      * 密码加密
      */

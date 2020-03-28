@@ -173,6 +173,7 @@
                 <version>${quartz.version}</version>
             </dependency>
 
+            <!-- apache log4j-->
             <dependency>
                 <groupId>org.apache.logging.log4j</groupId>
                 <artifactId>log4j-api</artifactId>

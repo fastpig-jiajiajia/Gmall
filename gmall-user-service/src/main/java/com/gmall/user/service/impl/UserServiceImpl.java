@@ -13,6 +13,7 @@ import com.gmall.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     UmsMemberReceiveAddressMapper umsMemberReceiveAddressMapper;
 
     @Override
+    @Cacheable(value = "umsMemberList")   // 缓存到本地
     public List<UmsMember> getAllUser() {
 
         List<UmsMember> umsMembers = userMapper.selectAllUser();//userMapper.selectAllUser();

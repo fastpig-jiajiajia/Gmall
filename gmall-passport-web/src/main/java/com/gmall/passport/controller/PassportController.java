@@ -62,7 +62,7 @@ public class PassportController {
      * @return
      */
     @RequestMapping("verify")
-        public String verify(String token, String currentIp, HttpServletRequest request){
+    public String verify(String token, String currentIp, HttpServletRequest request){
 
         // 通过jwt校验token真假
         Map<String,String> map = new HashMap<>();
@@ -126,7 +126,6 @@ public class PassportController {
      */
     @RequestMapping("index")
     public ModelAndView index(String ReturnUrl, ModelMap map){
-
         map.put("ReturnUrl", ReturnUrl);
         return new ModelAndView("index");
     }
@@ -324,7 +323,9 @@ public class PassportController {
             }
         }finally {
             try {
-                connection.close();
+                if(connection != null){
+                    connection.close();
+                }
             } catch (JMSException e1) {
                 e1.printStackTrace();
             }

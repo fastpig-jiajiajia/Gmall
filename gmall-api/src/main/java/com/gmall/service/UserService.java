@@ -25,4 +25,9 @@ public interface UserService {
     UmsMember getOauthUser(UmsMember umsMemberCheck);
 
     UmsMemberReceiveAddress getReceiveAddressById(String receiveAddressId);
+
+    public UmsMember getUmsMemberByUserName(String userName);
+
+
+    public void clearEhCache();
 }

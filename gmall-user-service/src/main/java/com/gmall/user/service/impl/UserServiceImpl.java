@@ -13,6 +13,9 @@ import com.gmall.util.RedisUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,7 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserServiceImpl implements UserService, UserDetailsService {
+// @CacheConfig(cacheNames = {"users"})
+public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserMapper userMapper;
@@ -37,13 +41,30 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     UmsMemberReceiveAddressMapper umsMemberReceiveAddressMapper;
 
+
+    /**
+     * // 缓存到本地
+     * @Cacheable可以指定三个属性，value、key和condition。
+    value属性指定cache的名称（即选择ehcache.xml中哪种缓存方式存储）
+    key属性是用来指定Spring缓存方法的返回结果时对应的key的。该属性支持SpringEL表达式。当我们没有指定该属性时，Spring将使用默认策略生成key。
+     * @return
+     */
     @Override
-    @Cacheable(value = "umsMemberList")   // 缓存到本地
+    @CachePut(value = "userCache")
     public List<UmsMember> getAllUser() {
 
         List<UmsMember> umsMembers = userMapper.selectAllUser();//userMapper.selectAllUser();
 
         return umsMembers;
+    }
+
+    /**
+     * 清空 #UmsMemberList 缓存
+     */
+    @Override
+    @CacheEvict(value="userCache")   //allEntries=true
+    public void clearEhCache(){
+        return ;
     }
 
     @Override
@@ -145,38 +166,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         return null;
-
     }
 
-    /**
-     * 权限验证
-     * @param username
-     * @return
-     * @throws UsernameNotFoundException
-     */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 这里可以捕获异常，使用异常映射，抛出指定的提示信息
-        // 用户校验的操作
-        // 假设密码是数据库查询的 123
-        UmsMember umsMember = userMapper.selectUserOfRolesMap(username);
-
-        String password = "$2a$10$XcigeMfToGQ2bqRToFtUi.sG1V.HhrJV6RBjji1yncXReSNNIPl1K";
-        // 假设角色是数据库查询的
-        List<UmsRole> roleList = umsMember.getUmsRoleList();
-        List<GrantedAuthority> grantedAuthorityList = new ArrayList<>() ;
-        /*
-         * Spring Boot 2.0 版本踩坑
-         * 必须要 ROLE_ 前缀， 因为 hasRole("LEVEL1")判断时会自动加上ROLE_前缀变成 ROLE_LEVEL1 ,
-         * 如果不加前缀一般就会出现403错误
-         * 在给用户赋权限时,数据库存储必须是完整的权限标识ROLE_LEVEL1
-         */
-        if (CollectionUtils.isEmpty(roleList)){
-            for (UmsRole role : roleList){
-                grantedAuthorityList.add(new SimpleGrantedAuthority(role.getName())) ;
-            }
-        }
-
-        return new User(username, password, grantedAuthorityList);
+    public UmsMember getUmsMemberByUserName(String userName){
+        return userMapper.selectUserOfRoles(userName);
     }
 }

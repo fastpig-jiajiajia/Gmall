@@ -10,6 +10,6 @@ public interface UserMapper extends Mapper<UmsMember> {
 
     List<UmsMember> selectAllUser();
 
-    UmsMember selectUserOfRolesMap(@Param("username") String username);
+    UmsMember selectUserOfRoles(@Param("username") String username);
 
 }

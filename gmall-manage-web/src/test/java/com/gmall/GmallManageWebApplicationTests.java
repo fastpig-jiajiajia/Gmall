@@ -22,7 +22,7 @@ class GmallManageWebApplicationTests {
 
 		TrackerClient trackerClient = new TrackerClient();
 		// 获得一个 TrackerServer 实例
-		TrackerServer trackerServer = new TrackerClient().getConnection();
+		TrackerServer trackerServer = new TrackerClient().getTrackerServer();
 
 		StorageClient storageClient = new StorageClient(trackerServer, null);
 

@@ -34,11 +34,11 @@
             <version>2.10.0</version>
         </dependency>
 
-        <dependency>
+<!--        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
             <version>RELEASE</version>
-        </dependency>
+        </dependency>-->
     </dependencies>
 
 
@@ -49,15 +49,15 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <!-- docker的maven插件，官网：
-            https://github.com/spotify/docker-maven-plugin -->
+            <!--&lt;!&ndash; docker的maven插件，官网：
+            https://github.com/spotify/docker-maven-plugin &ndash;&gt;
             <plugin>
-                <!-- 插件包 -->
+                &lt;!&ndash; 插件包 &ndash;&gt;
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>0.4.13</version>
                 <configuration>
-                    <!-- 生成的镜像名称 -->
+                    &lt;!&ndash; 生成的镜像名称 &ndash;&gt;
                     <imageName>39.101.198.56:5000/${project.artifactId}:${project.version}</imageName>
                     <baseImage>jdk1.8</baseImage>
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
@@ -71,7 +71,7 @@
                     </resources>
                     <dockerHost>http://39.101.198.56:2375</dockerHost>
                 </configuration>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 </project>

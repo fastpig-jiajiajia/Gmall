@@ -28,6 +28,7 @@
         <option value="$PROJECT_DIR$/gmall-payment-service/pom.xml" />
         <option value="$PROJECT_DIR$/gmall-seckill/pom.xml" />
         <option value="$PROJECT_DIR$/gmall-inventory-manage/pom.xml" />
+        <option value="$PROJECT_DIR$/gmall-user-gogs/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

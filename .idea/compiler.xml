@@ -27,6 +27,7 @@
         <module name="gmall-seckill" />
         <module name="gmall-service-util" />
         <module name="gmall-user" />
+        <module name="gmall-user-gogs" />
         <module name="gmall-user-service" />
         <module name="gmall-user-web" />
         <module name="gmall-web-util" />
@@ -56,6 +57,7 @@
       <module name="gmall-seckill" target="1.8" />
       <module name="gmall-service-util" target="1.8" />
       <module name="gmall-user" target="1.8" />
+      <module name="gmall-user-gogs" target="1.8" />
       <module name="gmall-user-service" target="1.8" />
       <module name="gmall-user-web" target="1.8" />
       <module name="gmall-web-util" target="1.8" />

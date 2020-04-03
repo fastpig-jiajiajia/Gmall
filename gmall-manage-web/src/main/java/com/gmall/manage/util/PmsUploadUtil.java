@@ -30,7 +30,7 @@ public class PmsUploadUtil {
         // 获得一个trackerServer的实例
         TrackerServer trackerServer = null;
         try {
-            trackerServer = trackerClient.getTrackerServer();
+            trackerServer = trackerClient.getConnection();
         } catch (IOException e) {
             e.printStackTrace();
         }

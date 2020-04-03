@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
      * @return
      */
     @Override
-    @CachePut(value = "userCache")
+//    @CachePut(value = "userCache")
     public List<UmsMember> getAllUser() {
 
         List<UmsMember> umsMembers = userMapper.selectAllUser();//userMapper.selectAllUser();
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
      * 清空 #UmsMemberList 缓存
      */
     @Override
-    @CacheEvict(value="userCache")   //allEntries=true
+//    @CacheEvict(value="userCache")   //allEntries=true
     public void clearEhCache(){
         return ;
     }

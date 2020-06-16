@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration // spring 配置类
 public class RedisConfig {
     //读取配置文件中的redis的ip地址，配置文件放在调用者的工程下，不同的工程可以配置不同的redis连接
-    @Value("${spring.redis.host:disabled}")
+    @Value("${spring.redis.host:39.101.198.56}")
     private String host;
 
-    @Value("${spring.redis.port:0}")
+    @Value("${spring.redis.port:6379}")
     private int port ;
 
     @Value("${spring.redis.database:0}")
@@ -20,22 +20,22 @@ public class RedisConfig {
     @Value("${spring.redis.password}")
     private String password;
 
-    @Value("${spring.redis.testOnBorrow}")
+    @Value("${spring.redis.testOnBorrow:false}")
     private boolean testOnBorrow;
 
-    @Value("${spring.redis.testOnReturnt}")
+    @Value("${spring.redis.testOnReturnt:false}")
     private boolean testOnReturnt;
 
-    @Value("${spring.redis.pool.max-active}")
+    @Value("${spring.redis.pool.max-active:20}")
     private Integer maxActive;
 
-    @Value("${spring.redis.pool.max-wait}")
+    @Value("${spring.redis.pool.max-wait:5}")
     private Integer maxWait;
 
-    @Value("${spring.redis.pool.min-idle}")
+    @Value("${spring.redis.pool.min-idle:5}")
     private Integer minIdle;
 
-    @Value("${spring.redis.timeout}")
+    @Value("${spring.redis.timeout:20000}")
     private Integer timeout;
 
 
@@ -45,7 +45,7 @@ public class RedisConfig {
         if(host.equals("disabled")){
             return null;
         }
-        RedisUtil redisUtil=new RedisUtil();
+        RedisUtil redisUtil = new RedisUtil();
         // 初始化连接池
         redisUtil.initPool(host, port, database, password, testOnBorrow);
         return redisUtil;

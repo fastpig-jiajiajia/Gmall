@@ -9,15 +9,16 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gmall</groupId>
-	<artifactId>demo</artifactId>
+	<artifactId>user-gogs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
+	<name>user-gogs</name>
 	<description>Demo project for Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
 		<mybatis.version>2.1.2</mybatis.version>
 		<mapper-starter.version>2.0.2</mapper-starter.version>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
 
 	<dependencies>
@@ -63,6 +64,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>user-gogs</finalName>
+
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>
@@ -81,10 +84,72 @@
 				<filtering>true</filtering>
 			</resource>
 		</resources>
+
+
 		<plugins>
+
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<path>/${project.artifactId}</path>
+					<port>8660</port>
+					<uriEncoding>${project.reporting.outputEncoding}</uriEncoding>
+					<url>http://39.101.198.56:8660/</url>
+					<server>tomcat8</server>
+					<update>true</update>
+					<username>root</username>
+					<password>Xr20200101!</password>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.4.13</version>
+				<executions>
+					<!--执行 mvn package 时 自动 执行 mvn docker:build-->
+					<execution>
+						<id>build-image</id>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<!--推送到私有仓库-->
+					<!-- <imageName>localhost:5000/fox/fox-eureka-server</imageName> -->
+					<!--本地-->
+					<imageName>${project.artifactId}</imageName>
+					<imageTags>
+						<imageTag>0.0.1</imageTag>
+						<!--可以指定多个标签-->
+						<imageTag>latest</imageTag>
+					</imageTags>
+					<!--覆盖已存在的标签 镜像-->
+					<forceTags>true</forceTags>
+					<!--使用pom 配置-->
+					<baseImage>java</baseImage>
+					<entryPoint>["java","-jar","/${project.build.finalName}.jar"]</entryPoint>
+					<!--使用pom 配置 END-->
+					<!--使用 Dockerfile-->
+					<!--<dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>-->
+					<!--使用 Dockerfile  END-->
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

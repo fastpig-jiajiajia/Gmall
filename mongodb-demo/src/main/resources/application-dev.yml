@@ -1,0 +1,63 @@
+server:
+    port: 9528
+    http2:
+        enabled: true
+    undertow:
+        io-threads: 16   # 设置IO线程数, 它主要执行非阻塞的任务,它们会负责多个连接, 默认设置每个CPU 核心一个线程
+        # 阻塞任务线程池, 当执行类似servlet请求阻塞操作, undertow会从这个线程池中取得线程,它的值设置取决于系统的负载,默认值是 io-threads*8
+        worker-threads: 256
+        # 以下的配置会影响buffer,这些buffer会用于服务器连接的IO操作,有点类似netty的池化内存管理
+        # 每块buffer的空间大小,越小的空间被利用越充分
+        buffer-size: 1024
+        # 每个区分配的buffer数量 , 所以pool的大小是buffer-size * buffers-per-region
+        buffers-per-region: 1024
+        # 是否分配的直接内存(NIO直接分配的堆外内存)
+        direct-buffers: true
+    tomcat:
+      # 最长等待时间，如果没有数据进来，等待一段时间后断开连接，释放线程。
+      connection-timeout: 180  # 超时时间：用来保障连接数不容易被压垮
+      # 最小备用线程数，tomcat启动时的初始化的线程数。
+      min-spare-threads: 100
+      # Tomcat可创建的最大的线程数，每一个线程处理一个请求，超过这个请求数后，客户端请求只能排队，等有线程释放才能处理。
+      max-threads: 200
+      # 最大连接数
+      max-connections: 8192
+    servlet:
+      context-path: /mongodb
+
+spring:
+  data:
+    mongodb:
+      host: 39.101.198.56    #mongo服务IP
+      port: 27017            #mongo服务端口号
+      database: usertest     #mongo数据库名
+      username: guest
+      password: Xr20190101!
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/mybatis-demo?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    username: root
+    password: Gepoint
+    driver-class-name: com.mysql.jdbc.Driver
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.gmall.mybatisdemo.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    use-generated-keys: true
+# 关于延迟加载有两个重要的设置：lazyLoadingEnabled表示延迟加载是否开启，如果设置为true表示开启，
+# 此时还需要设置aggressiveLazyLoading为false,才能做到按需加载，
+# 如果aggressiveLazyLoading设置为true则按需加载关闭，此时只要加载了某个属性就会将所有属性都加载。
+
+# 打印sql
+logging:
+  level:
+    com.gmall.mybatisdemo.mapper: debug
+
+
+
+
+
+

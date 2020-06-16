@@ -18,6 +18,7 @@
         <module name="gmall-manage-web" />
         <module name="gmall-order-service" />
         <module name="gmall-order-web" />
+        <module name="gmall-passport-service" />
         <module name="gmall-passport-web" />
         <module name="gmall-payment-service" />
         <module name="gmall-payment-web" />
@@ -31,7 +32,14 @@
         <module name="gmall-user-service" />
         <module name="gmall-user-web" />
         <module name="gmall-web-util" />
+        <module name="jbase-demo" />
+        <module name="memcached-demo" />
+        <module name="mongodb-demo" />
+        <module name="mybatis-demo" />
+        <module name="rabbitmq-delay-demo" />
+        <module name="redis-demo" />
         <module name="search-service" />
+        <module name="zookeeper-demo" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -48,6 +56,7 @@
       <module name="gmall-order-service" target="1.8" />
       <module name="gmall-order-web" target="1.8" />
       <module name="gmall-parent" target="1.8" />
+      <module name="gmall-passport-service" target="1.8" />
       <module name="gmall-passport-web" target="1.8" />
       <module name="gmall-payment-service" target="1.8" />
       <module name="gmall-payment-web" target="1.8" />
@@ -61,7 +70,14 @@
       <module name="gmall-user-service" target="1.8" />
       <module name="gmall-user-web" target="1.8" />
       <module name="gmall-web-util" target="1.8" />
+      <module name="jbase-demo" target="1.8" />
+      <module name="memcached-demo" target="1.8" />
+      <module name="mongodb-demo" target="1.8" />
+      <module name="mybatis-demo" target="1.8" />
+      <module name="rabbitmq-delay-demo" target="1.8" />
+      <module name="redis-demo" target="1.8" />
       <module name="search-service" target="1.8" />
+      <module name="zookeeper-demo" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

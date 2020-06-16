@@ -47,7 +47,7 @@ public class GwareController {
         String skuid =(String)hashMap.get("skuId");
         boolean hasStock = gwareService.hasStockBySkuId( skuid , num);
         if(hasStock){
-            return   ResponseEntity.ok("1");
+            return ResponseEntity.ok("1");
         }
         return  ResponseEntity.ok("0");
     }

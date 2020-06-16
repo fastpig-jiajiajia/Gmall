@@ -2,25 +2,34 @@ package com.gmall.payment.service.impl;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
 import com.alipay.api.request.AlipayTradeQueryRequest;
 import com.alipay.api.response.AlipayTradeQueryResponse;
+import com.gmall.GmallConstant;
 import com.gmall.entity.PaymentInfo;
 import com.gmall.payment.mapper.PaymentInfoMapper;
 import com.gmall.service.PaymentService;
 import com.gmall.util.ActiveMQUtil;
+import com.rabbitmq.client.AMQP;
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.ConfirmListener;
 import org.apache.activemq.ScheduledMessage;
 import org.apache.activemq.command.ActiveMQMapMessage;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.support.CorrelationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.jms.*;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class PaymentServiceImpl implements PaymentService {
@@ -30,6 +39,9 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Autowired
     private ActiveMQUtil activeMQUtil;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     @Autowired
     private AlipayClient alipayClient;
@@ -135,6 +147,101 @@ public class PaymentServiceImpl implements PaymentService {
         return resultMap;
     }
 
+    /**
+     * rabbitMQ 支付检查延迟队列，采用插件的方式
+     */
+    public String sendDelayPaymentResultCheckQueueRabbitMQ(String outTradeNo, Integer count){
+        com.rabbitmq.client.Connection connection = null;
+        Channel channel = null;
+
+        try { // 创建连接
+            com.rabbitmq.client.ConnectionFactory factory = new com.rabbitmq.client.ConnectionFactory();
+            factory.setHost("39.101.198.56");
+            factory.setPort(5672);
+            factory.setUsername("guest");
+            factory.setPassword("guest");
+            factory.setVirtualHost("/gmall");
+            connection = factory.newConnection();
+            // 定义信道
+            channel = connection.createChannel();
+            // 定义交换机名称
+            String exchange_name = "GMALL_PAYMENT_DELAY_EXCHANGE";
+            // 声明交换机，fanout是定义发布订阅模式  direct是 路由模式 topic是主题模式, x-delayed-message 配合插件实现延迟队列
+            Map<String, Object> arguments = new HashMap<>();
+            arguments.put("x-delayed-type", "direct");
+            channel.exchangeDeclare(exchange_name, "x-delayed-message", true, false, arguments);
+            channel.queueDeclare("GMALL_PAYMENT_DELAY_QUEUE", true, false, false, null);
+
+            // 设置定时时间
+            Map<String, Object> headers = new HashMap<>();
+            //延迟10s后发送
+            headers.put("x-delay", 10 * 1000);
+            AMQP.BasicProperties.Builder builder = new AMQP.BasicProperties.Builder();
+            builder.headers(headers);
+
+
+            String messageId = UUID.randomUUID().toString();
+            String createTime = org.apache.http.client.utils.DateUtils.formatDate(new Date(), "yyyy-MM-dd HH:mm:ss");
+            Map<String, Object> messageMap = new HashMap<>();
+            messageMap.put("messageId", messageId);
+            messageMap.put("outTradeNo", outTradeNo);
+            messageMap.put("count", count);
+            messageMap.put("createTime", createTime);
+
+            channel.basicPublish("GMALL_PAYMENT_DELAY_EXCHANGE", "GMALL_PAYMENT_DELAY_QUEUE", builder.build(), JSONObject.toJSONString(messageMap).getBytes());
+            CorrelationData correlationData = new CorrelationData();
+            correlationData.setId(UUID.randomUUID().toString());
+            rabbitTemplate.convertAndSend(exchange_name, "gmall.#",  JSONObject.toJSONString(messageMap), correlationData);
+
+            // 开启发送方确认模式
+            channel.confirmSelect();
+//            channel.basicPublish(exchange_name, "gmall.#", null, JSONObject.toJSONString(messageMap).getBytes());
+            // 异步监听确认和未确认的消息
+            channel.addConfirmListener(new ConfirmListener() {
+                @Override
+                public void handleNack(long deliveryTag, boolean multiple) {
+                    System.out.println("未确认消息，标识：" + deliveryTag);
+                }
+
+                @Override
+                public void handleAck(long deliveryTag, boolean multiple)  {
+                    System.out.println(String.format("已确认消息，标识：%d，多个消息：%b", deliveryTag, multiple));
+                }
+            });
+
+            // 普通 方式监听确认
+            if (channel.waitForConfirms()) {
+                System.out.println("消息发送成功" );
+                return GmallConstant.SUCCESS;
+            }else{
+                return GmallConstant.FAIL;
+            }
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }finally {
+            // 关闭连接
+            try {
+                if(channel != null){
+                    channel.close();
+                }
+                if(connection != null){
+                    connection.close();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+        return GmallConstant.FAIL;
+    }
+
+
+    /**
+     * activemq 支付检查延迟队列
+     * @param outTradeNo
+     * @param count
+     */
     @Override
     public void sendDelayPaymentResultCheckQueue(String outTradeNo, Integer count) {
         Connection connection = null;

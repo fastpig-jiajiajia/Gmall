@@ -89,6 +89,9 @@ public class PaymentController {
         // 向消息中间件发送一个检查支付状态(支付服务消费)的延迟消息队列
         paymentService.sendDelayPaymentResultCheckQueue(outTradeNo,5);
 
+        // rabbitmq 实现的延迟队列
+        paymentService.sendDelayPaymentResultCheckQueueRabbitMQ(outTradeNo, 5);
+
         // 提交请求到支付宝
         return form;
     }

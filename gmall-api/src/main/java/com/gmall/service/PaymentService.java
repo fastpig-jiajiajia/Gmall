@@ -12,4 +12,6 @@ public interface PaymentService {
     Map<String,Object> checkAlipayPayment(String out_trade_no);
 
     void sendDelayPaymentResultCheckQueue(String outTradeNo, Integer count);
+
+    String sendDelayPaymentResultCheckQueueRabbitMQ(String outTradeNo, Integer count);
 }

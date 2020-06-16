@@ -14,7 +14,6 @@ import com.gmall.manage.mapper.PmsSkuSaleAttrValueMapper;
 import com.gmall.service.SkuService;
 import com.gmall.util.RedisUtil;
 import com.google.common.hash.BloomFilter;
-import com.google.common.hash.Funnel;
 import com.google.common.hash.Funnels;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,14 +1,15 @@
 package com.gmall.passport.controller;
 
+import afu.org.checkerframework.checker.oigj.qual.O;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.gmall.entity.MessagePushConfirm;
 import com.gmall.entity.UmsMember;
+import com.gmall.passport.config.RsaKeyProperties;
+import com.gmall.service.IMessageService;
 import com.gmall.service.UserService;
-import com.gmall.util.ActiveMQUtil;
-import com.gmall.util.CookieUtil;
-import com.gmall.util.HttpclientUtil;
-import com.gmall.util.JwtUtil;
+import com.gmall.util.*;
 import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -22,6 +23,9 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -29,9 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.jms.*;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.CommonDataSource;
+import java.security.PrivateKey;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,10 +48,20 @@ public class PassportController {
 
     @Reference
     private UserService userService;
+    @Reference
+    private IMessageService messageService;
     @Autowired
     private RabbitTemplate rabbitTemplate;
     @Autowired
     private ActiveMQUtil activeMQUtil;
+    @Autowired
+    private SendSMSUtil sendSMSUtil;
+
+    /**
+     *  ras 加密
+     */
+    @Autowired
+    private RsaKeyProperties prop;
 
     @Value("${weibo.appKey.client_id}")
     private static String clientId = "546561297";
@@ -82,12 +98,18 @@ public class PassportController {
     }
 
     /**
+     *
+     *
+     * RabbitMQ 生产者，保证生产者的生产出来的消息，和事务保持一致性；
+     * 即事务执行成功，消息必须上传MQ，事务执行失败，消息也必须不能被发送，消息可以重复发送，MQ消费端可以保证消息的幂等性
+     *
      * 登陆验证
      * @param umsMember
      * @param request
      * @return
      */
     @RequestMapping("login")
+    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.READ_COMMITTED)
     public String login(UmsMember umsMember, HttpServletRequest request, HttpServletResponse response){
 
         String token = "";
@@ -97,6 +119,7 @@ public class PassportController {
 
         if(umsMemberLogin != null){
             // 登录成功
+            umsMember = userService.getUmsMemberByUserName(umsMember.getUsername());
 
             // 生成jwt的token，并且重定向到首页，携带该token
             token = generateTokenByJWT(umsMember, request);
@@ -104,12 +127,34 @@ public class PassportController {
             CookieUtil.setCookie(request, response, "cartListCookie", CookieUtil.getCookieValue(request, "cartListCookie", true), 60*60*2, true);
             CookieUtil.setCookie(request, response, "token", token, 60*60*2, true);
             request.setAttribute("token", token);
+
             // 将token存入redis一份
             userService.addUserToken(token, umsMember.getId());
-            // 合并购物车
-            sendLoginMergeCartMessageByRabbitMQ();
-            sendLoginMergeCartMessageActiveMQ(token, 5);
 
+            // 合并购物车，这里采用 本地消息的最终一致性方案
+            MessagePushConfirm messagePushConfirm = new MessagePushConfirm();
+            messagePushConfirm.setInsertdate(new Date());
+            messagePushConfirm.setReciver("cart-service");
+            messagePushConfirm.setSender("passport-web");
+            messagePushConfirm.setStatus(0);
+
+            // 设置messagedata
+            Map<String, Object> messageMap = new HashMap<>();
+            String cartListCookie = CookieUtil.getCookieValue(request, "cartListCookie", true);
+            messageMap.put("cartListCookie", cartListCookie);
+            messageMap.put("userId", umsMember.getId());
+            messageMap.put("userName", umsMember.getUsername());
+
+            // 发送登录短信
+            Map<String, String> sendSmsMap = new HashMap<>();
+            sendSmsMap.put("phone", "15189502292");
+            sendSmsMap.put("templateParam", "{\"code\" : \"2020\"}");
+            sendSMSUtil.sendSMS(sendSmsMap);
+
+            messagePushConfirm.setMessage(JSONObject.toJSONString(messageMap));
+
+            messageService.insertMessage(messagePushConfirm);
+            sendLoginMergeCartMessageActiveMQ(token, 5);
         }else{
             // 登录失败
             token = "fail";
@@ -232,32 +277,42 @@ public class PassportController {
         String ip = request.getHeader("x-forwarded-for");// 通过nginx转发的客户端ip
         if(StringUtils.isBlank(ip)){
             ip = request.getRemoteAddr();// 从request中获取ip
-            if(StringUtils.isBlank(ip)){
-                ip = "127.0.0.1";
+            if(StringUtils.isBlank(ip) || "0:0:0:0:0:0:0:1".equals(ip)){
+                ip = "localhost";
             }
         }
 
         // 按照设计的算法对参数进行加密后，生成token
-        token = JwtUtil.encode("2019gmall0105", userMap, ip);
+        token = JwtUtils.generateTokenExpireInMinutes(umsMember, prop.getPrivateKey(), 600);
 
         return token;
     }
 
+
+    /**
+     * RabbitMQ 生产者，保证生产者的生产出来的消息，和事务保持一致性；
+     * 即事务执行成功，消息必须上传MQ，事务执行失败，消息也必须不能被发送，消息可以重复发送，MQ消费端可以保证消息的幂等性
+     */
     @RequestMapping(value = "sendLoginMergeCartMessage", method = RequestMethod.POST)
-    private void sendLoginMergeCartMessageByRabbitMQ(){
-        try{
+    public void sendLoginMergeCartMessageByRabbitMQ(){
+
+
+        Connection connection = null;
+        Channel channel = null;
+
+        try { // 创建连接
             ConnectionFactory factory = new ConnectionFactory();
             factory.setHost("39.101.198.56");
             factory.setPort(5672);
             factory.setUsername("guest");
             factory.setPassword("guest");
             factory.setVirtualHost("/gmall");
-            Connection connection = factory.newConnection();
-            // 定义通道
-            Channel channel = connection.createChannel();
+            connection = factory.newConnection();
+            // 定义信道
+            channel = connection.createChannel();
             // 定义交换机名称
             String exchange_name = "topicExchange";
-            // fanout是定义发布订阅模式  direct是 路由模式 topic是主题模式
+            // 声明交换机，fanout是定义发布订阅模式  direct是 路由模式 topic是主题模式
             channel.exchangeDeclare(exchange_name, "topic", true);
 
             String messageId = UUID.randomUUID().toString();
@@ -268,15 +323,33 @@ public class PassportController {
             messageMap.put("messageData", messageData);
             messageMap.put("createTime", createTime);
 
-//            AMQP.Tx.CommitOk commitOk = channel.txCommit();.
-//            channel.basicPublish(exchange_name, "gmall.#", null, JSONObject.toJSONString(messageMap).getBytes());
-//            channel.close();
-//            connection.close();
+            // 开启发送方确认模式
+            channel.confirmSelect();
+            AMQP.Tx.CommitOk commitOk = channel.txCommit();
+            channel.basicPublish(exchange_name, "gmall.#", null, JSONObject.toJSONString(messageMap).getBytes());
+            if (channel.waitForConfirms()) {
+                System.out.println("消息发送成功" );
+            }else{
 
-            rabbitTemplate.convertAndSend("LOGIN_MERGECART_EXCHANGE", "gmall.#", JSONObject.toJSONString(messageMap));
+            }
+        //    rabbitTemplate.convertAndSend("LOGIN_MERGECART_EXCHANGE", "gmall.#", JSONObject.toJSONString(messageMap));
         }catch(Exception e){
             e.printStackTrace();
+        }finally {
+            // 关闭连接
+            try {
+                if(channel != null){
+                    channel.close();
+                }
+                if(connection != null){
+                    connection.close();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         }
+
     }
 
 
@@ -310,6 +383,7 @@ public class PassportController {
 
             // 为消息加入延迟时间
             mapMessage.setLongProperty(ScheduledMessage.AMQ_SCHEDULED_DELAY,1000*60);
+
 
             producer.send(mapMessage);
 

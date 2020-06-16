@@ -10,7 +10,7 @@ public class JwtUtil {
         if(salt!=null){
             key+=salt;
         }
-        JwtBuilder jwtBuilder = Jwts.builder().signWith(SignatureAlgorithm.HS256,key);
+        JwtBuilder jwtBuilder = Jwts.builder().signWith(SignatureAlgorithm.HS256, key);
 
         jwtBuilder = jwtBuilder.setClaims(param);
 

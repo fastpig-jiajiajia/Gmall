@@ -5,25 +5,14 @@ import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.gmall.entity.UmsMember;
 import com.gmall.entity.UmsMemberReceiveAddress;
-import com.gmall.entity.UmsRole;
 import com.gmall.service.UserService;
 import com.gmall.user.mapper.UmsMemberReceiveAddressMapper;
 import com.gmall.user.mapper.UserMapper;
 import com.gmall.util.RedisUtil;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.SecurityProperties;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 
 import java.util.ArrayList;
@@ -41,6 +30,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UmsMemberReceiveAddressMapper umsMemberReceiveAddressMapper;
 
+    @HystrixCommand(commandProperties = {
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "10"),
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
+    })
+
 
     /**
      * // 缓存到本地
@@ -54,6 +48,8 @@ public class UserServiceImpl implements UserService {
     public List<UmsMember> getAllUser() {
 
         List<UmsMember> umsMembers = userMapper.selectAllUser();//userMapper.selectAllUser();
+
+        int i = 1 / 0;
 
         return umsMembers;
     }

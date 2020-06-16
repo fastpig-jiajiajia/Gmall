@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gmall.mybatisdemo.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.gmall.mybatisdemo.entity.User">
+        <result column="id" jdbcType="INTEGER" property="id" />
+        <result column="userName" jdbcType="VARCHAR" property="userName" />
+        <result column="passWord" jdbcType="VARCHAR" property="passWord" />
+        <result column="realName" jdbcType="VARCHAR" property="realName" />
+    </resultMap>
+
+    <!--<select id="queryUserListByNameAndAge" resultType="com.zpc.mybatis.pojo.User">-->
+        <!--select * from tb_user-->
+        <!--&lt;!&ndash;如果多出一个and，会自动去除，如果缺少and或者多出多个and则会报错&ndash;&gt;-->
+        <!--<where>-->
+            <!--<if test="name!=null and name.trim()!=''">-->
+                <!--name like '%${name}%'-->
+            <!--</if>-->
+            <!--<if test="age!=null">-->
+                <!--and age = #{age}-->
+            <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <!-- trim 标签，内部都满足才添加，否则不添加
+        2、去除多余的逗号-->
+    <!--<update id="updateUser" parameterType="com.zpc.mybatis.pojo.User">-->
+        <!--UPDATE tb_user-->
+        <!--<trim prefix="set" suffixOverrides=",">-->
+            <!--<if test="userName!=null">user_name = #{userName},</if>-->
+            <!--<if test="password!=null">password = #{password},</if>-->
+            <!--<if test="name!=null">name = #{name},</if>-->
+            <!--<if test="age!=null">age = #{age},</if>-->
+            <!--<if test="sex!=null">sex = #{sex},</if>-->
+            <!--<if test="birthday!=null">birthday = #{birthday},</if>-->
+            <!--updated = now(),-->
+        <!--</trim>-->
+        <!--WHERE-->
+        <!--(id = #{id});-->
+    <!--</update>-->
+
+
+
+    <select id="getUserById" resultType="com.gmall.mybatisdemo.entity.User">
+        select * from user where id = #{id}
+        <if test="username != null and username.trim() != ''">
+            and username like #{username}
+        </if>
+        <choose>
+            <when test="realname != null and realname.trim() != ''">
+                and realname like #{realname}
+            </when>
+            <otherwise>
+                and realname = '徐锐'
+            </otherwise>
+        </choose>
+        and password in
+        <foreach collection="passwordList" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+
+
+    <select id="getUserOrderById" resultMap="OrderUserResultMap">
+        select a.*, b.* from user a, `ORDER` b where a.id = b.userId and a.id=#{id}
+    </select>
+
+    <resultMap id="OrderUserResultMap" type="com.gmall.mybatisdemo.entity.Order" autoMapping="true">
+        <id column="id" property="id"/>
+        <!--association:完成子对象的映射-->
+        <!--property:子对象在父对象中的属性名-->
+        <!--javaType:子对象的java类型-->
+        <!--autoMapping:完成子对象的自动映射，若开启驼峰，则按驼峰匹配-->
+        <association property="user" javaType="com.gmall.mybatisdemo.entity.User" autoMapping="true">
+            <id column="userid" property="id"/>
+        </association>
+    </resultMap>
+
+
+
+
+    <select id="getOrderDetailById" resultMap="OrderDetailResultMap">
+        select a.*, b.*, c.* from user a, `ORDER` b, order_detail c where a.id = b.userId and b.id=c.orderid and a.id=#{id}
+    </select>
+
+    <resultMap id="OrderDetailResultMap" type="com.gmall.mybatisdemo.entity.Order" autoMapping="true">
+        <id column="id" property="id"/>
+        <!--association:完成子对象的映射-->
+        <!--property:子对象在父对象中的属性名-->
+        <!--javaType:子对象的java类型-->
+        <!--autoMapping:完成子对象的自动映射，若开启驼峰，则按驼峰匹配-->
+        <association property="user" javaType="com.gmall.mybatisdemo.entity.User" autoMapping="true">
+            <!--<id column="userid" property="id"/>-->
+        </association>
+        <collection property="orderDetailList" javaType="List" ofType="com.gmall.mybatisdemo.entity.OrderDetail" autoMapping="true">
+            <!--<id column="orderid" property="id"/>-->
+        </collection>
+    </resultMap>
+
+
+
+
+    <select id="getOrderAllById" resultMap="OrderAllResultMap">
+        select a.*, b.*, c.*, d.* from user a, `ORDER` b, order_detail c, item d, detail_item e where a.id = b.userId and b.id=c.orderid and c.id = e.detailId and d.id = e.itemId  and  a.id=#{id}
+    </select>
+
+    <resultMap id="OrderAllResultMap" type="com.gmall.mybatisdemo.entity.Order" autoMapping="true">
+        <id column="id" property="id"/>
+        <!--association:完成子对象的映射-->
+        <!--property:子对象在父对象中的属性名-->
+        <!--javaType:子对象的java类型-->
+        <!--autoMapping:完成子对象的自动映射，若开启驼峰，则按驼峰匹配-->
+        <association property="user" javaType="com.gmall.mybatisdemo.entity.User" autoMapping="true">
+            <!--<id column="userid" property="id"/>-->
+        </association>
+        <collection property="orderDetailList" javaType="List" ofType="com.gmall.mybatisdemo.entity.OrderDetail" autoMapping="true">
+            <!--<id column="orderid" property="id"/>-->
+            <collection property="itemList" javaType="List" ofType="com.gmall.mybatisdemo.entity.Item" autoMapping="true">
+                <!--<id column="orderid" property="id"/>-->
+            </collection>
+        </collection>
+        <collection property="itemList" javaType="List" ofType="com.gmall.mybatisdemo.entity.Item" autoMapping="true">
+            <!--<id column="orderid" property="id"/>-->
+        </collection>
+    </resultMap>
+
+
+    <select id="getUserOrderByIdLazyLoading" resultMap="OrderUserLazyResultMap">
+        select * from `ORDER`  where id=#{id}
+    </select>
+
+    <resultMap id="OrderUserLazyResultMap" type="com.gmall.mybatisdemo.entity.Order" autoMapping="true">
+        <id column="id" property="id"/>
+        <!--association:完成子对象的映射-->
+        <!--property:子对象在父对象中的属性名-->
+        <!--javaType:子对象的java类型-->
+        <!--autoMapping:完成子对象的自动映射，若开启驼峰，则按驼峰匹配-->
+        <association property="user" javaType="com.gmall.mybatisdemo.entity.User" column="userid" select="getUserLazy">
+        </association>
+    </resultMap>
+
+    <select id="getUserLazy" resultType="com.gmall.mybatisdemo.entity.User">
+        select * from user where id=#{userid}
+    </select>
+
+
+    <insert id="insertBatchUser" parameterType="java.util.List">
+        insert into user (userName, password, realname)
+        values
+        <foreach collection="list" item="user" index="index" separator=",">
+            (
+              #{user.userName}, #{user.passWord}, #{user.realName}
+            )
+        </foreach>
+    </insert>
+
+    <select id="selectByMap" parameterType="java.util.Map" resultType="com.gmall.mybatisdemo.entity.User">
+        select * from user where realName = #{realName} or password=#{password}
+    </select>
+
+</mapper>

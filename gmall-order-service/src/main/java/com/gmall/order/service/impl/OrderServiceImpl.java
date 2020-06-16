@@ -11,7 +11,6 @@ import com.gmall.service.CartService;
 import com.gmall.service.OrderService;
 import com.gmall.util.ActiveMQUtil;
 import com.gmall.util.RedisUtil;
-import org.apache.activemq.command.ActiveMQMapMessage;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;

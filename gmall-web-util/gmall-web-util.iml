@@ -16,6 +16,8 @@
     </content>
     <orderEntry type="jdk" jdkName="1.8" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: net.sourceforge.nekohtml:nekohtml:1.9.22" level="project" />
+    <orderEntry type="library" name="Maven: xerces:xercesImpl:2.11.0" level="project" />
     <orderEntry type="module" module-name="gmall-common-util" />
     <orderEntry type="library" name="Maven: com.alibaba:fastjson:1.2.46" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-test:1.5.21.RELEASE" level="project" />

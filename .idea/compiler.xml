@@ -6,40 +6,45 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="demo" />
-        <module name="fastdfs-client-java" />
-        <module name="gmall-api" />
-        <module name="gmall-cart-service" />
-        <module name="gmall-cart-web" />
-        <module name="gmall-common-util" />
-        <module name="gmall-inventory-manage" />
-        <module name="gmall-item-web" />
-        <module name="gmall-manage-service" />
-        <module name="gmall-manage-web" />
-        <module name="gmall-order-service" />
-        <module name="gmall-order-web" />
-        <module name="gmall-passport-service" />
-        <module name="gmall-passport-web" />
-        <module name="gmall-payment-service" />
-        <module name="gmall-payment-web" />
-        <module name="gmall-redisson-test" />
-        <module name="gmall-search-service" />
         <module name="gmall-search-web" />
-        <module name="gmall-seckill" />
         <module name="gmall-service-util" />
-        <module name="gmall-user" />
-        <module name="gmall-user-gogs" />
-        <module name="gmall-user-service" />
-        <module name="gmall-user-web" />
-        <module name="gmall-web-util" />
-        <module name="jbase-demo" />
-        <module name="memcached-demo" />
-        <module name="mongodb-demo" />
-        <module name="mybatis-demo" />
-        <module name="rabbitmq-delay-demo" />
-        <module name="redis-demo" />
+        <module name="gmall-order-service" />
+        <module name="gmall-payment-service" />
+        <module name="demo" />
         <module name="search-service" />
+        <module name="gmall-user-gogs" />
+        <module name="rabbitmq-delay-demo" />
+        <module name="gmall-payment-web" />
+        <module name="gmall-order-service (2)" />
+        <module name="memcached-demo" />
+        <module name="gmall-cart-service" />
+        <module name="gmall-search-service" />
+        <module name="gmall-manage-web" />
+        <module name="gmall-user-service" />
+        <module name="gmall-cart-web" />
+        <module name="gmall-item-web" />
+        <module name="gmall-order-service (1)" />
+        <module name="jbase-demo" />
+        <module name="gmall-inventory-manage" />
+        <module name="gmall-order-web" />
+        <module name="gmall-api" />
+        <module name="gmall-common-util" />
+        <module name="mongodb-demo" />
+        <module name="gmall-passport-web" />
+        <module name="gmall-user" />
+        <module name="gmall-manage-service" />
+        <module name="gmall-passport-service" />
+        <module name="gmall-seckill" />
+        <module name="fastdfs-client-java" />
+        <module name="redis-demo" />
+        <module name="user-gogs" />
+        <module name="gmall-redisson-test" />
+        <module name="gware-manage" />
+        <module name="mybatis-demo" />
+        <module name="gmall-payment" />
+        <module name="gmall-user-web" />
         <module name="zookeeper-demo" />
+        <module name="gmall-web-util" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -54,10 +59,13 @@
       <module name="gmall-manage-service" target="1.8" />
       <module name="gmall-manage-web" target="1.8" />
       <module name="gmall-order-service" target="1.8" />
+      <module name="gmall-order-service (1)" target="1.8" />
+      <module name="gmall-order-service (2)" target="1.8" />
       <module name="gmall-order-web" target="1.8" />
       <module name="gmall-parent" target="1.8" />
       <module name="gmall-passport-service" target="1.8" />
       <module name="gmall-passport-web" target="1.8" />
+      <module name="gmall-payment" target="1.8" />
       <module name="gmall-payment-service" target="1.8" />
       <module name="gmall-payment-web" target="1.8" />
       <module name="gmall-redisson-test" target="1.8" />
@@ -70,6 +78,7 @@
       <module name="gmall-user-service" target="1.8" />
       <module name="gmall-user-web" target="1.8" />
       <module name="gmall-web-util" target="1.8" />
+      <module name="gware-manage" target="1.8" />
       <module name="jbase-demo" target="1.8" />
       <module name="memcached-demo" target="1.8" />
       <module name="mongodb-demo" target="1.8" />
@@ -77,7 +86,19 @@
       <module name="rabbitmq-delay-demo" target="1.8" />
       <module name="redis-demo" target="1.8" />
       <module name="search-service" target="1.8" />
+      <module name="user-gogs" target="1.8" />
       <module name="zookeeper-demo" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jbase-demo" options="-parameters" />
+      <module name="memcached-demo" options="-parameters" />
+      <module name="mongodb-demo" options="-parameters" />
+      <module name="mybatis-demo" options="-parameters" />
+      <module name="rabbitmq-delay-demo" options="-parameters" />
+      <module name="user-gogs" options="-parameters" />
+      <module name="zookeeper-demo" options="-parameters" />
+    </option>
   </component>
 </project>

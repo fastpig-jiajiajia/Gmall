@@ -24,14 +24,17 @@ public class UserController {
     private UserService userService;
 
     @Autowired
+    private UserController userController;
+
+    @Autowired
     private UserTest userTest;
 
     @RequestMapping("/getUserById/{id}")
-    public String getUserById(@PathVariable("id") String id){
+    public String getUserById(@PathVariable("id") String id) {
 
         String username = "x%";
         String realname = "徐锐";
-        List<String> passwordList = new ArrayList<String>(){
+        List<String> passwordList = new ArrayList<String>() {
             {
                 add("11111");
                 add("22222");
@@ -42,44 +45,48 @@ public class UserController {
 
     /**
      * 一对一
+     *
      * @param id
      * @return
      */
     @RequestMapping("getUserOrderById/{id}")
-    public String getUserOrderById(@PathVariable("id") String id){
+    public String getUserOrderById(@PathVariable("id") String id) {
 
         return JSONObject.toJSONString(userService.getUserOrderById(id));
     }
 
     /**
      * 一对多
+     *
      * @param id
      * @return
      */
     @RequestMapping("getOrderDetailById/{id}")
-    public String getOrderDetailById(@PathVariable("id") String id){
+    public String getOrderDetailById(@PathVariable("id") String id) {
 
         return JSONObject.toJSONString(userService.getOrderDetailById(id));
     }
 
     /**
      * 多对多
+     *
      * @param id
      * @return
      */
     @RequestMapping("getOrderAllById/{id}")
-    public String getOrderAllById(@PathVariable("id") String id){
+    public String getOrderAllById(@PathVariable("id") String id) {
 
         return JSONObject.toJSONString(userService.getOrderAllById(id));
     }
 
     /**
      * 延迟加载
+     *
      * @param id
      * @return
      */
     @RequestMapping("getUserOrderByIdLazyLoading/{id}")
-    public String getUserOrderByIdLazyLoading(@PathVariable("id") String id){
+    public String getUserOrderByIdLazyLoading(@PathVariable("id") String id) {
 
         return JSONObject.toJSONString(userService.getUserOrderByIdLazyLoading(id));
     }
@@ -89,7 +96,7 @@ public class UserController {
      * 获取所有的用户
      */
     @RequestMapping("/getAllUser")
-    public String getAllUser(){
+    public String getAllUser() {
         return JSONObject.toJSONString(userService.getAllUser());
     }
 
@@ -97,7 +104,7 @@ public class UserController {
      * 更新用户
      */
     @RequestMapping("/updateUserNameById/{id}/{userName}")
-    public String updateUserNameById(@PathVariable("id") String id, @PathVariable("userName")String userName ){
+    public String updateUserNameById(@PathVariable("id") String id, @PathVariable("userName") String userName) {
         return String.valueOf(userService.updateUserNameById(id, userName));
     }
 
@@ -105,11 +112,11 @@ public class UserController {
      * 批处理插入数据
      */
     @RequestMapping("/insertBatchUser")
-    public String insertBatchUser(){
+    public String insertBatchUser() {
         List<User> userList = new ArrayList<>();
 
         User user = new User();
-    //    user.setId(100);
+        //    user.setId(100);
         user.setUserName("ztr");
         user.setPassWord("22222");
         user.setRealName("朱涛然");
@@ -117,7 +124,7 @@ public class UserController {
 
         // 必须重新创建，否则插入的是同样的对象，上一个 add 是对 user 的引用
         User user1 = new User();
-    //    user1.setId(101);
+        //    user1.setId(101);
         user1.setUserName("sjm");
         user1.setPassWord("33333");
         user1.setRealName("邵加明");
@@ -137,7 +144,7 @@ public class UserController {
      * map 传参
      */
     @RequestMapping("/selectByMap")
-    public List<User> selectByMap(){
+    public List<User> selectByMap() {
         Map<String, Object> map = new HashMap<>();
         map.put("password", "11111");
         map.put("realName", "邵加明");
@@ -146,28 +153,49 @@ public class UserController {
     }
 
 
+
+
+
+
     @Transactional(propagation = Propagation.REQUIRED)
     @RequestMapping("/insertUser")
-    public String insertUser(){
-        try{
+    public String insertUser() {
+
+        try {
             User user = new User();
-            //    user.setId(100);
             user.setUserName("ztr");
             user.setPassWord("22222");
-            user.setRealName("userTest");
+            user.setRealName("userController");
             userService.insertUser(user);
 
-            userTest.test();
-        }catch (Exception e){
+//            userTest.test();
+            userController.test();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
+//            int a = 1/0;
+
 
         return "success";
     }
 
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void test(){
+
+        User user = new User();
+        user.setUserName("ztr");
+        user.setPassWord("11111");
+        user.setRealName("test");
+        userService.insertUser(user);
+            int a = 1/0;
+
+    }
+
+
     @Transactional
-    public void method(){
+    public void method() {
 
     }
 

@@ -1,6 +1,5 @@
 package com.gmall.jbasedemo.threadlocaldemo;
 
-import java.sql.Time;
 import java.util.Random;
 import java.util.concurrent.CyclicBarrier;
 import java.util.concurrent.TimeUnit;
@@ -43,6 +42,7 @@ public class TheadLocalDemo {
 
         new Thread(() -> {
             threadLocal.set("1111");
+            threadLocal.set("thread1111");
             try {
                 TimeUnit.SECONDS.sleep(3);
                 System.out.println(Thread.currentThread().getName() + "=====" + threadLocal.get());

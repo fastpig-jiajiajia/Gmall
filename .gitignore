@@ -26,8 +26,8 @@ hs_err_pid*
 */target/*
 */target
 */.settings/*
-.idea/
-*/.idea
+*/.idea/
+*/.idea/
 *.project
 *.launch
 *rebel.xml

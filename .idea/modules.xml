@@ -14,10 +14,13 @@
       <module fileurl="file://$PROJECT_DIR$/gmall-manage-service/gmall-manage-service.iml" filepath="$PROJECT_DIR$/gmall-manage-service/gmall-manage-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-manage-web/gmall-manage-web.iml" filepath="$PROJECT_DIR$/gmall-manage-web/gmall-manage-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-order-service/gmall-order-service.iml" filepath="$PROJECT_DIR$/gmall-order-service/gmall-order-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmall-order-service/gmall-order-service (1).iml" filepath="$PROJECT_DIR$/gmall-order-service/gmall-order-service (1).iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmall-passport-service/gmall-order-service (2).iml" filepath="$PROJECT_DIR$/gmall-passport-service/gmall-order-service (2).iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-order-web/gmall-order-web.iml" filepath="$PROJECT_DIR$/gmall-order-web/gmall-order-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-parent/gmall-parent.iml" filepath="$PROJECT_DIR$/gmall-parent/gmall-parent.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-passport-service/gmall-passport-service.iml" filepath="$PROJECT_DIR$/gmall-passport-service/gmall-passport-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-passport-web/gmall-passport-web.iml" filepath="$PROJECT_DIR$/gmall-passport-web/gmall-passport-web.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmall-payment-web/gmall-payment.iml" filepath="$PROJECT_DIR$/gmall-payment-web/gmall-payment.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-payment-service/gmall-payment-service.iml" filepath="$PROJECT_DIR$/gmall-payment-service/gmall-payment-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-payment-web/gmall-payment-web.iml" filepath="$PROJECT_DIR$/gmall-payment-web/gmall-payment-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-redisson-test/gmall-redisson-test.iml" filepath="$PROJECT_DIR$/gmall-redisson-test/gmall-redisson-test.iml" />
@@ -30,12 +33,14 @@
       <module fileurl="file://$PROJECT_DIR$/gmall-user-service/gmall-user-service.iml" filepath="$PROJECT_DIR$/gmall-user-service/gmall-user-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-user-web/gmall-user-web.iml" filepath="$PROJECT_DIR$/gmall-user-web/gmall-user-web.iml" />
       <module fileurl="file://$PROJECT_DIR$/gmall-web-util/gmall-web-util.iml" filepath="$PROJECT_DIR$/gmall-web-util/gmall-web-util.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmall-inventory-manage/gware-manage.iml" filepath="$PROJECT_DIR$/gmall-inventory-manage/gware-manage.iml" />
       <module fileurl="file://$PROJECT_DIR$/jbase-demo/jbase-demo.iml" filepath="$PROJECT_DIR$/jbase-demo/jbase-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/memcached-demo/memcached-demo.iml" filepath="$PROJECT_DIR$/memcached-demo/memcached-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/mongodb-demo/mongodb-demo.iml" filepath="$PROJECT_DIR$/mongodb-demo/mongodb-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/mybatis-demo/mybatis-demo.iml" filepath="$PROJECT_DIR$/mybatis-demo/mybatis-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/rabbitmq-delay-demo/rabbitmq-delay-demo.iml" filepath="$PROJECT_DIR$/rabbitmq-delay-demo/rabbitmq-delay-demo.iml" />
       <module fileurl="file://$PROJECT_DIR$/redis-demo/redis-demo.iml" filepath="$PROJECT_DIR$/redis-demo/redis-demo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmall-user-gogs/user-gogs.iml" filepath="$PROJECT_DIR$/gmall-user-gogs/user-gogs.iml" />
       <module fileurl="file://$PROJECT_DIR$/zookeeper-demo/zookeeper-demo.iml" filepath="$PROJECT_DIR$/zookeeper-demo/zookeeper-demo.iml" />
     </modules>
   </component>

@@ -1,0 +1,5 @@
+1，保证LINUX上安装了Mysql数据库，然后根据建表语句先建议表，并初始化好数据
+2，然后将order.sql放到redis的安装目录下（与redis-server启动文件同目录），在--raw<order.sql的时候，会被找到
+3，指令如下：
+mysql -utest -ptest stress --default-character-set=utf8 --skip-column-names --raw < order.sql | redis-cli -h 192.168.42.111 -p 6379 -a 12345678  --pipe
+

@@ -13,7 +13,6 @@ import com.gmall.service.OrderService;
 import com.gmall.service.PaymentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +38,7 @@ public class PaymentController {
 
     /**
      * 提交订单相关信息到支付宝，让用户进行付款
+     *
      * @param outTradeNo
      * @param totalAmount
      * @param request
@@ -47,7 +47,7 @@ public class PaymentController {
      */
     @RequestMapping("alipay/submit")
     @LoginRequired(loginSuccess = true)
-    public String alipay(String outTradeNo, BigDecimal totalAmount, HttpServletRequest request, ModelMap modelMap){
+    public String alipay(String outTradeNo, BigDecimal totalAmount, HttpServletRequest request, ModelMap modelMap) {
 
         // 获得一个支付宝请求的客户端(它并不是一个链接，而是一个封装好的http的表单请求)
         String form = null;
@@ -58,11 +58,11 @@ public class PaymentController {
         // 付款成功后的服务器之间的异步交互
         alipayRequest.setNotifyUrl(AlipayConfig.notify_payment_url);
 
-        Map<String,Object> map = new HashMap<>();
-        map.put("out_trade_no",outTradeNo);
-        map.put("product_code","FAST_INSTANT_TRADE_PAY");
-        map.put("total_amount",0.01);
-        map.put("subject","包飞飞的狗头");
+        Map<String, Object> map = new HashMap<>();
+        map.put("out_trade_no", outTradeNo);
+        map.put("product_code", "FAST_INSTANT_TRADE_PAY");
+        map.put("total_amount", 0.01);
+        map.put("subject", "包飞飞的狗头");
 
         String param = JSON.toJSONString(map);
 
@@ -87,8 +87,7 @@ public class PaymentController {
         paymentService.savePaymentInfo(paymentInfo);
 
         // 向消息中间件发送一个检查支付状态(支付服务消费)的延迟消息队列
-        paymentService.sendDelayPaymentResultCheckQueue(outTradeNo,5);
-
+        paymentService.sendDelayPaymentResultCheckQueue(outTradeNo, 5);
         // rabbitmq 实现的延迟队列
         paymentService.sendDelayPaymentResultCheckQueueRabbitMQ(outTradeNo, 5);
 
@@ -99,6 +98,7 @@ public class PaymentController {
 
     /**
      * 支付成功后回调的方法
+     *
      * @param request
      * @param modelMap
      * @return
@@ -134,9 +134,9 @@ public class PaymentController {
 
     @RequestMapping("index")
     @LoginRequired(loginSuccess = true)
-    public ModelAndView index(String outTradeNo, BigDecimal totalAmount, HttpServletRequest request, ModelMap modelMap){
-        String memberId = (String)request.getAttribute("memberId");
-        String nickname = (String)request.getAttribute("nickname");
+    public ModelAndView index(String outTradeNo, BigDecimal totalAmount, HttpServletRequest request, ModelMap modelMap) {
+        String memberId = (String) request.getAttribute("memberId");
+        String nickname = (String) request.getAttribute("nickname");
 
         modelMap.put("nickname", nickname);
         modelMap.put("outTradeNo", outTradeNo);
@@ -147,7 +147,7 @@ public class PaymentController {
 
     @RequestMapping("wx/submit")
     @LoginRequired(loginSuccess = true)
-    public String mx(String outTradeNo, BigDecimal totalAmount, HttpServletRequest request, ModelMap modelMap){
+    public String mx(String outTradeNo, BigDecimal totalAmount, HttpServletRequest request, ModelMap modelMap) {
 
         return null;
     }

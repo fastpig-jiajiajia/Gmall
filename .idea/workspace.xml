@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:gogs" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="083950df-8dab-4ec4-b8fa-d0d31fb6f386" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_data_spring_data_keyvalue_1_2_22_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_data_spring_data_redis_1_7_1_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_oxm_4_3_24_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_springframework_spring_test_4_3_2_RELEASE.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/config/RedisConfig.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/basic/Constants.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/service/ArticleService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/service/RedisArticleService.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/service/impl/RedisArticleServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/utils/JedisUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gmall-payment-web/src/main/java/com/gmall/payment/controller/PaymentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-payment-web/src/main/java/com/gmall/payment/controller/PaymentController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redis-demo/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/redis-demo/pom.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/jbase-demo/src/main/java/com/gmall/jbasedemo/optionaldemo/OptionalDemo.java" root0="SKIP_INSPECTION" />
+  </component>
+  <component name="ProjectId" id="1gnuwV5yVBZBC3bGVTEAITKtlBb" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\votedemo" />
+      <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\config" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="RedisDemoApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="redis-demo" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.gmall.RedisDemoApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="083950df-8dab-4ec4-b8fa-d0d31fb6f386" name="Default Changelist" comment="" />
+      <created>1598762915193</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1598762915193</updated>
+      <workItem from="1598762933246" duration="1045000" />
+      <workItem from="1598877024993" duration="1795000" />
+      <workItem from="1599053868299" duration="1191000" />
+      <workItem from="1599581290321" duration="1096000" />
+      <workItem from="1599913095810" duration="2461000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="2" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="703" y="320" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1598543724987">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="703" y="320" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1598543724987" />
+    <state x="488" y="128" width="781" height="660" key="find.popup" timestamp="1599751505899">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="488" y="128" width="781" height="660" key="find.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1599751505899" />
+  </component>
+  <component name="XDebuggerManager">
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo typeName="java.lang.ThreadLocal$ThreadLocalMap" fieldName="size" />
+      </pinned-members>
+    </pin-to-top-manager>
+  </component>
+</project>

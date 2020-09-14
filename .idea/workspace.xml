@@ -25,26 +25,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="083950df-8dab-4ec4-b8fa-d0d31fb6f386" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/redis-demo/sql/order.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/sql/建表语句.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/sql/注意事项（必读）.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/cluster/factory/JedisClusterFactory.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/cluster/utils/SerializerUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/piepline/JamesPipeline.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/piepline/RedisTools.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/redpackagedemo/basic/Basic.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/redpackagedemo/main/MainTestRedPack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/redpackagedemo/redpack/GenRedPack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/redpackagedemo/redpack/GetRedPack.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/redpackagedemo/utils/JedisUtils.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/resp/ClientTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/resp/JamesJedis.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/resp/ServerRedis.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/resp/ServiceTest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/main/resources/lua/ipCount.lua" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/redis-demo/src/test/java/com/gmall/redis/cluster/RedisClusterTest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/service/impl/RedisArticleServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/votedemo/service/impl/RedisArticleServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/sentinel/SentinelTemplateUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/sentinel/SentinelTemplateUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/redis-demo/src/test/java/com/gmall/redis/sentinel/JedisSentinel.java" beforeDir="false" afterPath="$PROJECT_DIR$/redis-demo/src/test/java/com/gmall/redis/sentinel/JedisSentinel.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,18 +59,18 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/redis-demo/src/main/java/com/gmall/redis/cluster" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/redis-demo/src/test/java/com/gmall/redis/sentinel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="com.gmall.redis.cluster" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\test\java\com\gmall\redis\sentinel" />
+      <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\sentinel" />
       <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\cluster" />
       <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\resp" />
       <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\piepline" />
-      <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\sql" />
-      <recent name="D:\MyJavaWorkSpace\Gmall\redis-demo\src\main\java\com\gmall\redis\redpackagedemo" />
     </key>
   </component>
   <component name="RunManager">
@@ -113,7 +96,7 @@
       <workItem from="1598877024993" duration="1795000" />
       <workItem from="1599053868299" duration="1191000" />
       <workItem from="1599581290321" duration="1096000" />
-      <workItem from="1599913095810" duration="3560000" />
+      <workItem from="1599913095810" duration="3870000" />
     </task>
     <servers />
   </component>

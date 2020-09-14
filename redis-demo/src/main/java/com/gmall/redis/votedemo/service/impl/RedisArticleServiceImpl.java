@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 /**
  * 文章发布使用redis技术
  * <p>
- * 用户可以发表文章(Hash),发表时默认给自己的文章投了一票（set/String + Strinng）
+ * 用户可以发表文章(Hash),发表时默认给自己的文章投了一票（set/String + String）
  * 用户在查看网站时可以按评分进行排列查看（zset）
  * 用户也可以按照文章发布时间进行排序(zset)
  * 为节约内存，一篇文章发表后，7天内可以投票,7天过后就不能再投票了(String)

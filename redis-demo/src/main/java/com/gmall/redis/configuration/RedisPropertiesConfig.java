@@ -22,7 +22,7 @@ public class RedisPropertiesConfig {
     @Value("${spring.redis.database:0}")
     private int database;
 
-    @Value("${spring.redis.password}")
+    @Value("${spring.redis.password:Xr20190101!}")
     private String password;
 
     @Value("${spring.redis.testOnBorrow:false}")

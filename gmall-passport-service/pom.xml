@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gmall</groupId>
-	<artifactId>gmall-order-service</artifactId>
+	<artifactId>gmall-passport-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gmall-passport-service</name>
 	<description>Demo project for Spring Boot</description>

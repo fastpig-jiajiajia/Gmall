@@ -1,10 +1,10 @@
 package com.gmall.redis.redpackagedemo.redpack;
 
+import com.gmall.redis.redpackagedemo.basic.Basic;
+import com.gmall.redis.redpackagedemo.utils.JedisUtils;
+
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-
-import com.james.cache.basic.Basic;
-import com.james.cache.utils.JedisUtils;
 
 /**
  * 多线程模拟用户抢红包

@@ -4,31 +4,24 @@
 # Log file
 *.log
 
-# BlueJ files
-*.ctxt
-
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
-
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
-*.zip
-*.tar.gz
-*.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
 
 
+#（1）规则：fd1/*
+#说明：忽略目录 fd1 下的全部内容；注意，不管是根目录下的 /fd1/ 目录，还是某个子目录 /child/fd1/ 目录，都会被忽略；
+#（2）规则：/fd1/*
+#说明：忽略根目录下的 /fd1/ 目录的全部内容；
 */target/*
-*/target
 */.settings/*
-*/.idea/
-*/.idea/
+.idea/
+*.iml
+.mvn/
+mvnw
+mvnw.cmd
 *.project
 *.launch
 *rebel.xml
+*.release
 
+MavenWrapperDownloader.java
+maven-wrapper.jar
+maven-wrapper.properties

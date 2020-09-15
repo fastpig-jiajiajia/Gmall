@@ -3,8 +3,8 @@ package com.gmall.redis.redpackagedemo.redpack;
 import java.util.concurrent.CountDownLatch;
 
 import com.alibaba.fastjson.JSONObject;
-import com.james.cache.basic.Basic;
-import com.james.cache.utils.JedisUtils;
+import com.gmall.redis.redpackagedemo.basic.Basic;
+import com.gmall.redis.redpackagedemo.utils.JedisUtils;
 
 public class GenRedPack {
 	/**

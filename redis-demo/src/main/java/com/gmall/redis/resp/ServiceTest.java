@@ -1,6 +1,6 @@
 package com.gmall.redis.resp;
 
-import com.james.cache.jedis.RedisTools;
+import com.gmall.redis.piepline.RedisTools;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 

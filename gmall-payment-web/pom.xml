@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gmall</groupId>
-	<artifactId>gmall-payment</artifactId>
+	<artifactId>gmall-payment-web</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>gmall-payment</name>
 	<description>Demo project for Spring Boot</description>

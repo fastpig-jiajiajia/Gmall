@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.gmall</groupId>
-	<artifactId>user-gogs</artifactId>
+	<artifactId>gmall-user-gogs</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>user-gogs</name>
 	<description>Demo project for Spring Boot</description>

@@ -1,7 +1,7 @@
 package com.gmall.redis.redpackagedemo.main;
 
-import com.james.cache.redpack.GenRedPack;
-import com.james.cache.redpack.GetRedPack;
+import com.gmall.redis.redpackagedemo.redpack.GenRedPack;
+import com.gmall.redis.redpackagedemo.redpack.GetRedPack;
 
 public class MainTestRedPack {
 	

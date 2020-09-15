@@ -21,6 +21,7 @@ mvnw.cmd
 *.launch
 *rebel.xml
 *.release
+HELP.md
 
 MavenWrapperDownloader.java
 maven-wrapper.jar

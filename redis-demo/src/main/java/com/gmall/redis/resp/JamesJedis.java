@@ -43,7 +43,7 @@ public class JamesJedis {
     }
 
     public static void main(String[] args) throws IOException {
-        Socket socket = new Socket("127.0.0.1",6379);
+        Socket socket = new Socket("39.101.198.56",6379);
         set(socket,"shaka","loveStus");
         System.out.println(get(socket,"shaka"));
     }

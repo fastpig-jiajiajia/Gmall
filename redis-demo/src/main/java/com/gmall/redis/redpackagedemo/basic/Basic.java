@@ -1,9 +1,8 @@
 package com.gmall.redis.redpackagedemo.basic;
 
 public class Basic {
-	public static String ip = "192.168.42.111";
+	public static String ip = "39.101.198.56";
 	public static int port = 6379;
-	public static String auth = "12345678";
 	public static int honBaoCount = 1000;
 
 	public static int threadCount = 20;

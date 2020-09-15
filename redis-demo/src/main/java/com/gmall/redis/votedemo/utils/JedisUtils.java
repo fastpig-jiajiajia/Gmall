@@ -20,7 +20,6 @@ public class JedisUtils {
     private JedisPool pool = null;
     private String ip = "39.101.198.56";
     private int port = 6379;
-    private String auth = "Xr20190101!";
 
     /**
      * 传入ip和端口号构建redis 连接
@@ -35,7 +34,7 @@ public class JedisUtils {
             config.setMaxIdle(5);
             config.setMaxWaitMillis(100);
             config.setTestOnBorrow(true);
-            pool = new JedisPool(config, this.ip, this.port, 100000, this.auth);
+            pool = new JedisPool(config, this.ip, this.port, 100000);
         }
     }
 

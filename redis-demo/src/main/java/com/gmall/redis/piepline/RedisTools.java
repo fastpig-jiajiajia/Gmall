@@ -13,9 +13,6 @@ public class RedisTools {
 	/**
 	 * 初始化数据，批量设值
 	 * redis提供的批量设值mset  批量取值 mget，但没有批量删除mdel指令
-	 * @author 【享学课堂】 James老师 qq ：1076258117
-	 * @author 【享学课堂】 架构技术QQ群 ：684504192
-	 * @author 【享学课堂】 往期视频依娜老师 ：2470523467
 	 */
 	//String[]{"key:0","v0","key:1","v1","key:2","v2","key:3","v3","key:4","v4"......."key:4999","v:4999"})
 	public static void initRedisData() {

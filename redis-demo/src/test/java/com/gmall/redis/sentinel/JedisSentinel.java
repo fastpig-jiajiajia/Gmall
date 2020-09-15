@@ -20,9 +20,8 @@ public class JedisSentinel {
         sentinels.add(hostAndPort3);
 
         String clusterName = "mymaster";
-        String password = "12345678";
 
-        JedisSentinelPool redisSentinelJedisPool = new JedisSentinelPool(clusterName, sentinels, password);
+        JedisSentinelPool redisSentinelJedisPool = new JedisSentinelPool(clusterName, sentinels);
 
         Jedis jedis = null;
         try {

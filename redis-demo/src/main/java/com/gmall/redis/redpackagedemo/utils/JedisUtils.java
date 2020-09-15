@@ -28,7 +28,7 @@ public class JedisUtils {
 	 * @param prot
 	 *            端口
 	 */
-	public JedisUtils(String ip, int prot, String auth) {
+	public JedisUtils(String ip, int prot) {
 		if (pool == null) {
 			JedisPoolConfig config = new JedisPoolConfig();
 			// 控制一个pool可分配多少个jedis实例，通过pool.getResource()来获取；
@@ -48,7 +48,7 @@ public class JedisUtils {
 			// 在borrow一个jedis实例时，是否提前进行validate操作；如果为true，则得到的jedis实例均是可用的；
 			config.setTestOnBorrow(true);
 			// pool = new JedisPool(config, "192.168.0.121", 6379, 100000);
-			pool = new JedisPool(config, ip, prot, 100000, auth);
+			pool = new JedisPool(config, ip, prot, 100000);
 		}
 	}
 

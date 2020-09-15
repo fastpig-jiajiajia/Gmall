@@ -23,7 +23,7 @@ public class GetRedPack {
 						e.printStackTrace();
 					}
 					//拿到jedis连接
-					JedisUtils jedis = new JedisUtils(Basic.ip, Basic.port, Basic.auth);
+					JedisUtils jedis = new JedisUtils(Basic.ip, Basic.port);
 					while(true){
 						//模拟一个用户ID使用UUID XXXX
 						String userid = UUID.randomUUID().toString();

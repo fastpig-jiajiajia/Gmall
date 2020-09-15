@@ -11,7 +11,6 @@ import javax.annotation.Resource;
  * AUTHOR james
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration("classpath:applicationContext.xml")
 public class SentinelTest {
 
     @Resource

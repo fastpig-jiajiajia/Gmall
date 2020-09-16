@@ -1,0 +1,19 @@
+spring:
+  redis:
+    cluster:
+      nodes:
+        - 39.101.198.56:6399
+        - 39.101.198.56:6380
+        - 39.101.198.56:6381
+        - 39.101.198.56:6389
+        - 39.101.198.56:6390
+        - 39.101.198.56:6391
+    database: 0 # redis 连接数据库
+    pool:
+      max-active: 20 # 最大活跃数
+      max-wait: 5 # 最大等待数
+      max-idle: 8
+      min-idle: 5 # 线程池最小保持数
+    timeout: 20000  # 超时时间设置
+    testOnBorrow : false  # 取连接时检测是否有可用连接
+    testOnReturn : false  # 取连接时检测是否有可用连接

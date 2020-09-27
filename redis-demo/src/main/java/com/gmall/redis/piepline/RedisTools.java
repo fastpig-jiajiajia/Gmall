@@ -7,7 +7,7 @@ import redis.clients.jedis.Jedis;
  */
 public class RedisTools {
 	public static int arraylength = 10000;
-	public static String ip = "127.0.0.1";
+	public static String ip = "39.101.198.56";
 	public static int port = 6379;
 	public static String[] keys = new String[arraylength/2];
 	/**

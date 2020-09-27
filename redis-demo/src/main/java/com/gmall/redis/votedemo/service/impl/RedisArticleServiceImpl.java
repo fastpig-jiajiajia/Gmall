@@ -1,17 +1,13 @@
 package com.gmall.redis.votedemo.service.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.annotation.Resource;
-
 import com.gmall.redis.votedemo.basic.Constants;
 import com.gmall.redis.votedemo.service.RedisArticleService;
-import com.gmall.redis.votedemo.utils.JedisUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -26,8 +22,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class RedisArticleServiceImpl implements RedisArticleService {
 
-    @Resource
-    private JedisUtils jedis;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 文章发布
@@ -40,92 +36,93 @@ public class RedisArticleServiceImpl implements RedisArticleService {
      */
     @Override
     public String postArticle(String title, String content, String link, String userId) {
-
-        //article:001
-        String articleId = String.valueOf(jedis.incr("article:")); // articleId=1
-
-
-        //投票键： voted:
-        String voted = "voted:" + articleId;
-
-        jedis.sadd(voted, userId);
-        jedis.expire(voted, Constants.ONE_WEEK_IN_SECONDS);
-
+        // 文章发表的 ID
+        String incrId = String.valueOf(redisTemplate.opsForValue().increment(Constants.ARTICLE_ID, 1));
         long now = System.currentTimeMillis() / 1000;
 
-        String article = "article:" + articleId;
+        // 设置文章内容缓存
+        String articleId = Constants.ARTICLE_KEY + incrId;  // 文章内容ID
+        Map<String, String> articleMap = new HashMap<>();
+        articleMap.put(Constants.TITLE, title);
+        articleMap.put(Constants.LINK, link);
+        articleMap.put(Constants.CONTENT, content);
+        articleMap.put(Constants.VOTES, String.valueOf(1));
+        articleMap.put(Constants.USER_ID, userId);
+        articleMap.put(Constants.TIME, String.valueOf(now));
+        redisTemplate.opsForHash().putAll(articleId, articleMap);
 
-        HashMap<String, String> articleData = new HashMap<String, String>();
-        articleData.put("title", title);
-        articleData.put("link", link);
-        articleData.put("user", userId);
-        articleData.put("now", String.valueOf(now));
-        articleData.put("votes", "1");
+        // 存储已对该文章投过票的人，投票时间仅限一周
+        String voteId = Constants.VOTE_KEY + articleId;  // 文章的投票ID
+        redisTemplate.opsForSet().add(voteId, userId);
+        redisTemplate.expire(voteId, Constants.ONE_WEEK_IN_SECONDS, TimeUnit.SECONDS);
 
-        jedis.hmset(article, articleData);
-        jedis.zadd("score:info", now + Constants.VOTE_SCORE, article);
-        jedis.zadd("time:", now, article);
+        // 总的文章的得分排行
+        redisTemplate.opsForZSet().add(Constants.SCORE_KEY, articleId, Constants.VOTE_SCORE);
+        // 总的文章的发布时间排序
+        redisTemplate.opsForZSet().add(Constants.PUBLISH_TIME_KEY, articleId, now);
+
+        // 自己文章的得分排行
+        redisTemplate.opsForZSet().add(userId + ":" + Constants.USER_SCORE_KEY, articleId, Constants.VOTE_SCORE);
+        // 自己文章的发布时间排序
+        redisTemplate.opsForZSet().add(userId + ":" + Constants.USER_SCORE_KEY, articleId, now);
 
         return articleId;
     }
 
 
     /**
-     * 文章投票
+     * 投票
      *
-     * @param 用户ID 文章ID（article:001）  //001
+     * @param userId
+     * @param articleId
      */
     @Override
-    public void articleVote(String userId, String article) {
-
-
+    public void articleVote(String userId, String articleId) {
         //计算投票截止时间
         long cutoff = (System.currentTimeMillis() / 1000) - Constants.ONE_WEEK_IN_SECONDS;
         //检查是否还可以对文章进行投票,如果该文章的发布时间比截止时间小，则已过期，不能进行投票
-        if (jedis.zscore("time:", article) < cutoff) {
+        if (redisTemplate.opsForZSet().score(userId + ":" + Constants.USER_SCORE_KEY, articleId) < cutoff) {
             return;
         }
-        //获取文章主键id
-        String articleId = article.substring(article.indexOf(':') + 1); ////article:1    1
-
-        if (jedis.sadd("voted:" + articleId, userId) == 1) {
-            jedis.zincrby("score:info", Constants.VOTE_SCORE, article);//分值加400
-            jedis.hincrBy(article, "votes", 1l);//投票数加1
+        // 每个人只允许投一次票
+        if (redisTemplate.opsForSet().add(Constants.VOTE_KEY + articleId, userId) == 1) {
+            redisTemplate.opsForZSet().incrementScore(Constants.SCORE_KEY, articleId, Constants.VOTE_SCORE); //分值加400
+            redisTemplate.opsForHash().increment(articleId, Constants.VOTES, 1); //投票数加1
         }
     }
 
 
     /**
      * 文章列表查询（分页）
+     * 可以根据投票数、发布时间进行查询
      *
      * @param page key
      * @return redis查询结果
      */
     @Override
-    public List<Map<String, String>> getArticles(int page, String key) {
+    public List<Map<String, String>> listArticles(int page, String key) {
         int start = (page - 1) * Constants.ARTICLES_PER_PAGE;
         int end = start + Constants.ARTICLES_PER_PAGE - 1;
         //倒序查询出投票数最高的文章，zset有序集合，分值递减
-        Set<String> ids = jedis.zrevrange(key, start, end);
+        Set<String> ids = redisTemplate.opsForZSet().reverseRange(key, start, end);
         List<Map<String, String>> articles = new ArrayList<Map<String, String>>();
         for (String id : ids) {
-            Map<String, String> articleData = jedis.hgetAll(id);
-            articleData.put("id", id);
+            Map<String, String> articleData = redisTemplate.opsForHash().entries(id);
+            articleData.put(Constants.ARTICLE_ID, id);
             articles.add(articleData);
         }
 
         return articles;
     }
 
-
-    @Override
-    public String hget(String key, String feild) {
-        return jedis.hget(key, feild);
-    }
-
     @Override
     public Map<String, String> hgetAll(String key) {
-        return jedis.hgetAll(key);
+        return redisTemplate.opsForHash().entries(key);
     }
 
-} 
+    @Override
+    public String hget(String key, String field) {
+        return String.valueOf(redisTemplate.opsForHash().get(key, field));
+    }
+
+}

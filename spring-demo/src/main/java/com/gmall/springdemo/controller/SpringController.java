@@ -2,7 +2,6 @@ package com.gmall.springdemo.controller;
 
 import com.gmall.springdemo.abstractclass.ParentAbstractClass;
 import com.gmall.springdemo.abstractclass.SonClass;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

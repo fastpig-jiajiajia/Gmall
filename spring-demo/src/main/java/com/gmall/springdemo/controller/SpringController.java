@@ -24,7 +24,8 @@ public class SpringController {
     @RequestMapping(value = "/print/{name}")
     public String print(@PathVariable("name") String name){
         System.out.println(map.get("2").printParent(name));
-        System.out.println(map.get("3").printParent(name));
+        System.out.println(map.get("3").parentA());
+        System.out.println(sonClass.parentA());
 //        System.out.println(map.get("4").printParent(name));
         return map.get("1").printParent(name);
     }

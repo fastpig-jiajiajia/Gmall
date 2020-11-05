@@ -3,7 +3,6 @@ package com.gmall.springdemo.abstractclass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -25,7 +24,7 @@ public class AutowireClass {
 //    private ParentAbstractClass parentClass2;
 
     @Bean
-    public Map<String, ParentAbstractClass> mapBean(){
+    public Map<String, ParentAbstractClass> mapBean() {
         Map<String, ParentAbstractClass> map = new HashMap<>();
         map.put("1", sonClass);
         map.put("2", parentClass);

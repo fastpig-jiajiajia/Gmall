@@ -13,7 +13,6 @@ import java.util.Map;
 @Component
 public class DelayConsumerRabbitMQ {
 
-    //queues = "",
     @RabbitHandler
     @RabbitListener(bindings = @QueueBinding(
             exchange = @Exchange(value = "GMALL-DLX-EXCHANGE", durable = "true", type = "topic"),

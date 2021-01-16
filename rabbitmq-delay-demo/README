@@ -1,0 +1,24 @@
+delay package:
+    rabbitMQ 延迟队列的实现
+
+
+direct package:
+    根据路由键路由队列
+
+fanout package:
+    消息广播到绑定的队列，不管队列绑定了什么路由键，消息经过交换器，绑定该交换器的每个队列都有一份。
+
+topic package:
+    通过使用“*”和“#”通配符进行处理，使来自不同源头的消息到达同一个队列，”.”将路由键分为了几个标识符，“*”匹配 1 个，“#”匹配一个 或多个。
+
+exchange package:
+    四种 Exchange，常用的三种Demo: direct,fanout,topic
+
+msgdurable package:
+    消息持久化：
+        Exchange持久化 durable=true，
+        Queue持久化 durable=true，
+        Msg持久化 delivery-mode=2
+
+setmsg package:
+    应答模式，生产者可以给消费者发消息，消费者也可以给生产者发消息。

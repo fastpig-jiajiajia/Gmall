@@ -28,31 +28,38 @@ spring:
     url: jdbc:mysql://rm-8vbsw8p959dm7052wro.mysql.zhangbei.rds.aliyuncs.com/mybatis-demo?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     username: root_x
     password: Xr20200101!
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
   rabbitmq: # RabbitMQ 配置
     host: 39.101.198.56
+#    host: 127.0.0.1
+    username: admin
+    password: admin
+    port: 5672
+    # 手动填加的hostName
+    # 虚拟主机(一个RabbitMQ服务可以配置多个虚拟主机，每一个虚拟机主机之间是相互隔离，相互独立的，
+    # 授权用户到指定的virtual-host就可以发送消息到指定队列
+    virtual-host: my_vhost
     listener:
       simple:
-        acknowledge-mode: manual # 消费者确认方式
-    password: guest
-    port: 5672
+       acknowledge-mode: manual # 消费者确认方式
     # 是否需要生产者确认, auto自动 none不会发送ACK（与channelTransacted=true不兼容）
     publisher-confirms: true
     # 开启发送失败退回
     publisher-returns: true
     template:
-      mandatory: true # 保证监听有效
+#      在发送消息时设置 mandatory 标志，告诉 RabbitMQ，如果消息不可路由，应该将消息返回给发送者，并通知失败。
+#      可以这样认为，开启 mandatory 是开启故障检测模式。
+#      注意：它只会让 RabbitMQ 向你通知失败（addReturnListener），而不会通知成功。如果消息正确路由到队列，则发布者不会受到任何通知。
+#      带来的问题是无法确保发布消 息一定是成功的，因为通知失败的消息可能会丢失。
+      mandatory: true # 交换机没有匹配的队列时，会将消息返回给生产者，避免消息丢失
       retry:
-        enabled: true # 重试次数
-    username: guest
-    # 手动填加的hostName
-    # 虚拟主机(一个RabbitMQ服务可以配置多个虚拟主机，每一个虚拟机主机之间是相互隔离，相互独立的，
-    # 授权用户到指定的virtual-host就可以发送消息到指定队列
-    virtual-host: /gmall
+       enabled: true # 重试次数
+
+
 
 mybatis:
   mapper-locations: classpath:mapper/*Mapper.xml
-  type-aliases-package: com.gmall.mybatisdemo.entity
+  type-aliases-package: com.gmall.rabbitmq.entity
   configuration:
     map-underscore-to-camel-case: true
     lazy-loading-enabled: true

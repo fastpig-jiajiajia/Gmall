@@ -20,6 +20,7 @@ public class AutowireClass {
     @Resource(name = "son2Class")
     private ParentAbstractClass parentClass1;
 
+    // 是注入不进来的，抽象类无法实例化
 //    @Resource(name = "parentAbstractClass")
 //    private ParentAbstractClass parentClass2;
 

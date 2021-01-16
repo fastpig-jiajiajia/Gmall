@@ -30,12 +30,14 @@ public class ZookeeperDistrbuteLock extends ZookeeperAbstractLock {
     public void waitLock() {
         IZkDataListener izkDataListener = new IZkDataListener() {
 
+            @Override
             public void handleDataDeleted(String path) throws Exception {
                 // 唤醒被等待的线程
                 if (countDownLatch != null) {
                     countDownLatch.countDown();
                 }
             }
+            @Override
             public void handleDataChange(String path, Object data) throws Exception {
 
             }

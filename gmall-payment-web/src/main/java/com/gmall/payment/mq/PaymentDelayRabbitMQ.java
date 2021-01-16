@@ -14,11 +14,13 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
 import java.util.Date;
 import java.util.Map;
 
+@Component
 public class PaymentDelayRabbitMQ {
 
     @Reference
@@ -69,7 +71,7 @@ public class PaymentDelayRabbitMQ {
                     // 继续发送延迟检查任务，计算延迟时间等
                     System.out.println("没有支付成功，检查剩余次数为"+count+",继续发送延迟检查任务");
                     count--;
-                    paymentService.sendDelayPaymentResultCheckQueueRabbitMQ(out_trade_no, count);
+                    paymentService.sendDelayPaymentResultCheckQueue(out_trade_no, count);
                 }else{
                     System.out.println("检查剩余次数用尽，结束检查");
                 }

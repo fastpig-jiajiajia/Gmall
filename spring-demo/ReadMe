@@ -1,0 +1,45 @@
+Spring 的高级使用或者源码Demo
+
+abstractclass package:
+    问题：抽象类能否被Spring实例化？抽象类是否可以像接口那样被子类注入？如何实现自定义Map的注入？
+    主要是测试了抽象类及其实现类的实例化关系，将Spring实例化的Bean放入自己的Map中，并将这个Map注册为Spring的Bean。
+    结论：1、抽象类不可以被Spring实例化，加上@Component 注解也不行
+        2、抽象类可以被其子类注入，使用@Autowired即可
+        3、Map 放入Spring 的Bean，在使用@Bean注解注册即可，需要制定Bean名称，使用时BeanName即可，
+          并且从Map中获取的Bean也是Spring容器中的Bean。
+
+
+PostProcessor package:
+    BeanFactoryPostProcessor:
+        继承这个接口可以实现在 BeanDefinition扫描收集、封装、注册完成后，Bean实例化前对几乎所有的Bean相关的信息进行自定义操作，
+        例如添加新的BeanDefinition 进行实例化，注册自定义作用域。
+
+    BeanPostProcessor:
+        继承这个接口可以实现对所有Bean在其实例化完成后，初始化之前或者完成之后对BeanDefinition进行增删改查
+
+    BeanDefinitionRegistryPostProcessor:
+        继承这个接口可以实现在 BeanDefinition扫描收集、封装、注册完成后，Bean实例化前对所有的BeanDefinition 进行增删改查
+
+
+configuration package:
+    @Configuration、@Bean 注解详解:
+    MyConfiguration:
+        beanName: myConfiguration  #类名驼峰
+        factoryBeanName: null
+        factoryMethodName: null
+    MyBeanPostProcessor getMyBeanPostProcessor():
+        beanName: getMyBeanPostProcessor  # 方法名
+        factoryBeanName: myConfiguration  # 类名驼峰
+        factoryMethodName: getMyBeanPostProcessor  # 方法名
+
+
+importAnnotation package:
+    ImportConfiguration1: @Import + @Componnet 注册 Bean
+    ImportConfiguration2: @Import + @Componnet + ImportSelector接口 注册 Bean
+    ImportConfiguration3: @Import + @Componnet + ImportBeanDefinitionRegistrar接口 注册 Bean
+
+
+
+targetsource package:
+    在 bean 实例化结束后，属性注入前，拦截 Bean，返回自己的代理对象作为 bean;
+

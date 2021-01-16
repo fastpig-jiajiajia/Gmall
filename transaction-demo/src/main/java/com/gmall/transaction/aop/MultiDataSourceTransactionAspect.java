@@ -23,22 +23,23 @@ import java.util.Stack;
 @Component
 @Aspect
 public class MultiDataSourceTransactionAspect {
- 
+
     /**
      * 线程本地变量：为什么使用栈？※为了达到后进先出的效果※
      */
     private static final ThreadLocal<Stack<Pair<DataSourceTransactionManager, TransactionStatus>>> THREAD_LOCAL = new ThreadLocal<>();
- 
+
     /**
      * 用于获取事务管理器
      */
     @Autowired
     private ApplicationContext applicationContext;
- 
+
     /**
      * 事务声明
      */
     private DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+
     {
         // 非只读模式
         def.setReadOnly(false);
@@ -47,14 +48,14 @@ public class MultiDataSourceTransactionAspect {
         // 事务传播行为
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
     }
- 
+
     /**
      * 切面
      */
     @Pointcut("@annotation(cn.zhh.annotation.MultiDataSourceTransactional)")
     public void pointcut() {
     }
- 
+
     /**
      * 声明事务
      *
@@ -72,7 +73,7 @@ public class MultiDataSourceTransactionAspect {
         }
         THREAD_LOCAL.set(pairStack);
     }
- 
+
     /**
      * 提交事务
      */
@@ -86,7 +87,7 @@ public class MultiDataSourceTransactionAspect {
         }
         THREAD_LOCAL.remove();
     }
- 
+
     /**
      * 回滚事务
      */

@@ -206,10 +206,6 @@ public class EventTest {
         client.create().orSetData().creatingParentsIfNeeded().withMode(CreateMode.EPHEMERAL).forPath("/test/node02/node02_2","deer".getBytes());
 
         Thread.sleep(10000);
-
     }
-
-
-
 
 }

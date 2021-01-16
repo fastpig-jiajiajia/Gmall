@@ -1,0 +1,7 @@
+server:
+  port: 8082
+
+zookeeper:
+  url: 39.101.198.56
+  connectionTimeoutMs: 30000
+  sessionTimeoutMs: 30000

@@ -1,0 +1,8 @@
+
+reflect: package
+    usedemo:   https://www.cnblogs.com/noKing/p/9038234.html
+        反射使用案例：反射类和父类公共方法，反射使用类和父类全部方法、fianl static 属性（先去除修饰符，再添加回来）其余的使用方法都一样。
+    cache: 反射性能优化
+        对于需要拦截的配置了 @ResourceCheck注解的类，在初始化完成后使用 BeanPostProcessor 进行判断拦截
+        遍历Bean中的方法，如果配置了注解，就进行拦截，并将结果缓存在 ClsCacheUtil map中，后续根据 类名+方法名+拦截对象名
+        直接获取需要取值的字段，进行反射取值。

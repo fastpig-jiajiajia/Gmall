@@ -1,0 +1,9 @@
+config:
+configuration: jedis、RedisTemplate 配置
+
+jedis:
+    jedis 使用
+
+piepline:
+    redis Gossip 协议通信
+    RedisTools: jedis 批量设值

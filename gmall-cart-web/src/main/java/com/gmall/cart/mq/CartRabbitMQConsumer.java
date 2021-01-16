@@ -4,7 +4,6 @@ package com.gmall.cart.mq;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.gmall.entity.MessagePushConfirm;
 import com.gmall.service.CartService;
 import com.gmall.util.RedisUtil;
 import com.rabbitmq.client.Channel;

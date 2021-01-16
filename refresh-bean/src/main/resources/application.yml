@@ -1,0 +1,14 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev
+
+refresh:
+  enable: true
+  zk:
+    path: /refresh_config
+
+
+
